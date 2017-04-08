@@ -1,6 +1,7 @@
 package com.miaolegemitong.fangbaby.babyswork.corporate.excel;
 
 import com.miaolegemitong.fangbaby.babyswork.corporate.pojo.CorporateClient;
+import com.miaolegemitong.fangbaby.babyswork.corporate.pojo.JingbanType;
 import com.miaolegemitong.fangbaby.babyswork.corporate.pojo.People;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -78,8 +79,8 @@ public class ExcelGenerator {
             if (client.getBizLicenceValidDate() != null && !"".equals(client.getBizLicenceValidDate())) {
                 sheet4.getRow(14).getCell(6).setCellValue(client.getBizLicenceValidDate());
             }
-            if (client.getAdministration() != null) {
-                sheet5.getRow(3).getCell(2).setCellValue(client.getAdministration().getName());
+            if (client.getAdministration() != null && !"".equals(client.getAdministration())) {
+                sheet5.getRow(3).getCell(2).setCellValue(client.getAdministration());
             }
             if (client.getZhuceAddress() != null && !"".equals(client.getZhuceAddress())) {
                 sheet4.getRow(2).getCell(1).setCellValue(client.getZhuceAddress());
@@ -107,11 +108,16 @@ public class ExcelGenerator {
                 sheet4.getRow(8).getCell(4).setCellValue(client.getPhone());
                 sheet5.getRow(9).getCell(6).setCellValue(client.getPhone());
             }
-            if (client.getType() != null) {
-                sheet5.getRow(7).getCell(2).setCellValue(client.getType().getType());
+            if (client.getType() != null && !"".equals(client.getType())) {
+                sheet5.getRow(7).getCell(2).setCellValue(client.getType());
             }
             if (client.getFoundDate() != null && !"".equals(client.getFoundDate())) {
                 sheet5.getRow(7).getCell(6).setCellValue(client.getFoundDate());
+            }
+            if (client.getDepositorType() != null && !"".equals(client.getDepositorType())) {
+                sheet4.getRow(3).getCell(1).setCellValue(client.getDepositorType());
+                sheet5.getRow(3).getCell(6).setCellValue(client.getDepositorType());
+                sheet5.getRow(4).getCell(2).setCellValue(client.getDepositorType());
             }
             if (client.getCorporation() != null) {
                 People corporation = client.getCorporation();
@@ -119,10 +125,6 @@ public class ExcelGenerator {
                 sheet4.getRow(4).getCell(5).setCellValue(corporation.getPhone());
                 sheet4.getRow(5).getCell(4).setCellValue(corporation.getID());
                 sheet4.getRow(5).getCell(6).setCellValue(corporation.getIDValidDate());
-                sheet4.getRow(6).getCell(3).setCellValue(corporation.getName());
-                sheet4.getRow(6).getCell(5).setCellValue(corporation.getPhone());
-                sheet4.getRow(7).getCell(4).setCellValue(corporation.getID());
-                sheet4.getRow(7).getCell(6).setCellValue(corporation.getIDValidDate());
                 sheet4.getRow(10).getCell(2).setCellValue(corporation.getName());
                 sheet4.getRow(11).getCell(2).setCellValue(corporation.getID());
                 sheet4.getRow(11).getCell(6).setCellValue(corporation.getIDValidDate());
@@ -131,10 +133,6 @@ public class ExcelGenerator {
                 sheet6.getRow(2).getCell(8).setCellValue(corporation.getName());
                 sheet6.getRow(3).getCell(3).setCellValue(corporation.getID());
                 sheet6.getRow(3).getCell(7).setCellValue(corporation.getIDValidDate());
-                sheet6.getRow(5).getCell(1).setCellValue(corporation.getName());
-                sheet6.getRow(6).getCell(0).setCellValue("        " + corporation.getID());
-                sheet6.getRow(6).getCell(4).setCellValue(corporation.getIDValidDate());
-                sheet6.getRow(6).getCell(7).setCellValue(corporation.getPhone());
                 sheet6.getRow(25).getCell(2).setCellValue(corporation.getName());
                 sheet6.getRow(26).getCell(2).setCellValue(corporation.getID());
                 sheet6.getRow(26).getCell(6).setCellValue(corporation.getIDValidDate());
@@ -148,6 +146,10 @@ public class ExcelGenerator {
                 row.getCell(4).setCellValue(corporation.getID());
                 row.getCell(6).setCellValue(corporation.getPhone());
                 row.getCell(7).setCellValue(corporation.getEmail());
+                sheet4.getRow(6).getCell(3).setCellValue(corporation.getName());
+                sheet4.getRow(6).getCell(5).setCellValue(corporation.getPhone());
+                sheet4.getRow(7).getCell(4).setCellValue(corporation.getID());
+                sheet4.getRow(7).getCell(6).setCellValue(corporation.getIDValidDate());
                 sheet7.getRow(1).getCell(2).setCellValue(corporation.getName());
                 sheet7.getRow(2).getCell(2).setCellValue(corporation.getID());
                 sheet7.getRow(2).getCell(5).setCellValue(corporation.getIDValidDate());
@@ -171,9 +173,19 @@ public class ExcelGenerator {
                 sheet7.getRow(6).getCell(5).setCellValue(operator.getIDValidDate());
                 sheet7.getRow(7).getCell(2).setCellValue(operator.getPhone());
                 sheet7.getRow(7).getCell(5).setCellValue(operator.getEmail());
-                sheet10.getRow(4).getCell(2).setCellValue(operator.getName());
-                sheet10.getRow(4).getCell(6).setCellValue(operator.getPhone());
             }
+            People jingban = client.getCorporation();
+            if (JingbanType.getByName(client.getJingbanType()) == JingbanType.JINGBAN && client.getOperator() != null) {
+                jingban = client.getOperator();
+            } else if (JingbanType.getByName(client.getJingbanType()) == JingbanType.CAIGUAN && client.getFinanceManager() != null) {
+                jingban = client.getFinanceManager();
+            }
+            sheet6.getRow(5).getCell(1).setCellValue(jingban.getName());
+            sheet6.getRow(6).getCell(0).setCellValue("        " + jingban.getID());
+            sheet6.getRow(6).getCell(4).setCellValue(jingban.getIDValidDate());
+            sheet6.getRow(6).getCell(7).setCellValue(jingban.getPhone());
+            sheet10.getRow(4).getCell(2).setCellValue(jingban.getName());
+            sheet10.getRow(4).getCell(6).setCellValue(jingban.getPhone());
             OutputStream stream = new FileOutputStream(path);
             template.write(stream);
             stream.close();

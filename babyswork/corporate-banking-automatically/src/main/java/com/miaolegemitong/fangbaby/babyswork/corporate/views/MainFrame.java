@@ -1,10 +1,8 @@
 package com.miaolegemitong.fangbaby.babyswork.corporate.views;
 
+import com.miaolegemitong.fangbaby.babyswork.corporate.Main;
 import com.miaolegemitong.fangbaby.babyswork.corporate.excel.ExcelGenerator;
-import com.miaolegemitong.fangbaby.babyswork.corporate.pojo.Administration;
-import com.miaolegemitong.fangbaby.babyswork.corporate.pojo.CompanyType;
-import com.miaolegemitong.fangbaby.babyswork.corporate.pojo.CorporateClient;
-import com.miaolegemitong.fangbaby.babyswork.corporate.pojo.People;
+import com.miaolegemitong.fangbaby.babyswork.corporate.pojo.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
@@ -35,7 +33,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
 
     private JTextField companyNameText = new JTextField();
 
-    private JLabel companyAccoutLabel = new JLabel("公司账号");
+    private JLabel companyAccountLabel = new JLabel("公司账号");
 
     private JTextField companyAccountText = new JTextField();
 
@@ -54,6 +52,8 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
     private JLabel administrationLabel = new JLabel("工商管局");
 
     private JComboBox<String> administrationComboBox = new JComboBox<>();
+
+    private JTextField administrationText = new JTextField();
 
     private JLabel zhuceAddressLabel = new JLabel("注册地址");
 
@@ -79,13 +79,25 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
 
     private JTextField phoneText = new JTextField();
 
-    private JLabel typeLabel = new JLabel("公司类型");
+    private JLabel typeLabel = new JLabel("经济类型");
 
-    private JComboBox<String> typeComboBox = new JComboBox<>();
+    public JComboBox<String> typeComboBox = new JComboBox<>();
+
+    public JTextField typeText = new JTextField();
 
     private JLabel foundDateLabel = new JLabel("成立日期");
 
     private JTextField foundDateText = new JTextField();
+
+    private JLabel jingbanTypeLabel = new JLabel("开户经办");
+
+    private JComboBox<String> jingbanTypeComboBox = new JComboBox<>();
+
+    private JLabel depositorLabel = new JLabel("存款人类型");
+
+    private JComboBox<String> depositorComboBox = new JComboBox<>();
+
+    public JTextField depositorText = new JTextField();
 
     private JLabel financeManagerNameLabel = new JLabel("姓名");
 
@@ -179,7 +191,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
         fillPane(contentPane, width - 20, height - 40);
     }
 
-    private void fillPane(JPanel contentPane, int width, int height) {
+    private void fillPane(JPanel contentPane, final int width, final int height) {
         companyInfoLabel.setFont(new Font("微软雅黑", Font.BOLD, 20));
         companyInfoLabel.setBounds(20, -5, width / 5, height / 10);
         contentPane.add(companyInfoLabel);
@@ -193,9 +205,9 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
         companyNameText.setBounds(20 + width / 14, -5 + height / 10, width / 6, height / 20);
         contentPane.add(companyNameText);
 
-        companyAccoutLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        companyAccoutLabel.setBounds(20 + 3 * width / 12, -5 + (height / 10), width / 14, height / 20);
-        contentPane.add(companyAccoutLabel);
+        companyAccountLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
+        companyAccountLabel.setBounds(20 + 3 * width / 12, -5 + (height / 10), width / 14, height / 20);
+        contentPane.add(companyAccountLabel);
 
         companyAccountText.setBounds(20 + 9 * width / 28, -5 + height / 10, width / 6, height / 20);
         contentPane.add(companyAccountText);
@@ -250,6 +262,23 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
         }
         administrationComboBox.setModel(new DefaultComboBoxModel<>(ads));
         administrationComboBox.addItemListener(this);
+        administrationComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    Administration administration = Administration.getByName(MainFrame.this.administrationComboBox.getSelectedItem().toString().trim());
+                    if (administration != null && administration == Administration.OTHER) {
+                        MainFrame.this.administrationComboBox.setBounds(20 + 9 * width / 28, -5 + 3 * height / 20, width / 7, height / 20);
+                        MainFrame.this.administrationText.setBounds(20 + 13 * width / 28, -5 + 3 * height / 20, 31 * width / 112, height / 20);
+                        MainFrame.this.getContentPane().add(MainFrame.this.administrationText);
+                    } else {
+                        MainFrame.this.administrationComboBox.setBounds(20 + 9 * width / 28, -5 + 3 * height / 20, 3 * width / 7, height / 20);
+                        MainFrame.this.getContentPane().remove(MainFrame.this.administrationText);
+                        MainFrame.this.getContentPane().repaint();
+                    }
+                }
+            }
+        });
         contentPane.add(administrationComboBox);
 
         zhuceAddressLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
@@ -308,6 +337,23 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
             ts[i] = types[i].getType();
         }
         typeComboBox.setModel(new DefaultComboBoxModel<>(ts));
+        typeComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    CompanyType type = CompanyType.getByType(MainFrame.this.typeComboBox.getSelectedItem().toString().trim());
+                    if (type != null && type == CompanyType.OTHER) {
+                        MainFrame.this.typeComboBox.setBounds(20 + 9 * width / 28, -5 + height / 4, width / 7, height / 20);
+                        MainFrame.this.typeText.setBounds(20 + 13 * width / 28, -5 + height / 4, 31 * width / 112, height / 20);
+                        MainFrame.this.getContentPane().add(MainFrame.this.typeText);
+                    } else {
+                        MainFrame.this.typeComboBox.setBounds(20 + 9 * width / 28, -5 + height / 4, 3 * width / 7, height / 20);
+                        MainFrame.this.getContentPane().remove(MainFrame.this.typeText);
+                        MainFrame.this.getContentPane().repaint();
+                    }
+                }
+            }
+        });
         contentPane.add(typeComboBox);
 
         foundDateLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
@@ -317,154 +363,198 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
         foundDateText.setBounds(20 + 23 * width / 28, -5 + height / 4, width / 6, height / 20);
         contentPane.add(foundDateText);
 
+        //第五行
+        jingbanTypeLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
+        jingbanTypeLabel.setBounds(20, -5 + 6 * height / 20, width / 14, height / 20);
+        contentPane.add(jingbanTypeLabel);
+
+        jingbanTypeComboBox.setBounds(20 + width / 14, -5 + 6 * height / 20, width / 6, height / 20);
+        JingbanType[] jingbans = JingbanType.values();
+        String[] js = new String[jingbans.length];
+        for (int i = 0; i < jingbans.length; i++) {
+            js[i] = jingbans[i].getName();
+        }
+        jingbanTypeComboBox.setModel(new DefaultComboBoxModel<>(js));
+        contentPane.add(jingbanTypeComboBox);
+
+        depositorLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
+        depositorLabel.setBounds(20 + 5 * width / 21, -5 + 6 * height / 20, width / 10, height / 20);
+        contentPane.add(depositorLabel);
+
+        depositorComboBox.setBounds(20 + 71 * width / 210, -5 + 6 * height / 20, 2 * width / 7, height / 20);
+        DepositorType[] depositors = DepositorType.values();
+        String[] ds = new String[depositors.length];
+        for (int i = 0; i < depositors.length; i++) {
+            ds[i] = depositors[i].getName();
+        }
+        depositorComboBox.setModel(new DefaultComboBoxModel<>(ds));
+        depositorComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    DepositorType type = DepositorType.getByName(MainFrame.this.depositorComboBox.getSelectedItem().toString().trim());
+                    if (type != null && type == DepositorType.USERDEFINE) {
+                        MainFrame.this.depositorComboBox.setBounds(20 + 71 * width / 210, -5 + 6 * height / 20, width / 7, height / 20);
+                        MainFrame.this.depositorText.setBounds(20 + 101 * width / 210, -5 + 6 * height / 20, 31 * width / 112, height / 20);
+                        MainFrame.this.getContentPane().add(MainFrame.this.depositorText);
+                    } else {
+                        MainFrame.this.depositorComboBox.setBounds(20 + 71 * width / 210, -5 + 6 * height / 20, 2 * width / 7, height / 20);
+                        MainFrame.this.getContentPane().remove(MainFrame.this.depositorText);
+                        MainFrame.this.getContentPane().repaint();
+                    }
+                }
+            }
+        });
+        contentPane.add(depositorComboBox);
+
         //法人信息
         corporationInfoLabel.setFont(new Font("微软雅黑", Font.BOLD, 20));
-        corporationInfoLabel.setBounds(20, -5 + 3 * height / 10, width / 5, height / 10);
+        corporationInfoLabel.setBounds(20, -5 + 7 * height / 20, width / 5, height / 10);
         contentPane.add(corporationInfoLabel);
 
         //法人信息第一行
         corporationNameLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        corporationNameLabel.setBounds(20, -5 + 2 * height / 5, width / 14, height / 20);
+        corporationNameLabel.setBounds(20, -5 + 9 * height / 20, width / 14, height / 20);
         contentPane.add(corporationNameLabel);
 
-        corporationNameText.setBounds(20 + width / 14, -5 + 2 * height / 5, width / 6, height / 20);
+        corporationNameText.setBounds(20 + width / 14, -5 + 9 * height / 20, width / 6, height / 20);
         contentPane.add(corporationNameText);
 
         corporationPhoneLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        corporationPhoneLabel.setBounds(20 + 3 * width / 12, -5 + 2 * height / 5, width / 14, height / 20);
+        corporationPhoneLabel.setBounds(20 + 3 * width / 12, -5 + 9 * height / 20, width / 14, height / 20);
         contentPane.add(corporationPhoneLabel);
 
-        corporationPhoneText.setBounds(20 + 9 * width / 28, -5 + 2 * height / 5, 3 * width / 7, height / 20);
+        corporationPhoneText.setBounds(20 + 9 * width / 28, -5 + 9 * height / 20, 3 * width / 7, height / 20);
         contentPane.add(corporationPhoneText);
 
         corporationEmailLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        corporationEmailLabel.setBounds(20 + 3 * width / 4, -5 + 2 * height / 5, width / 14, height / 20);
+        corporationEmailLabel.setBounds(20 + 3 * width / 4, -5 + 9 * height / 20, width / 14, height / 20);
         contentPane.add(corporationEmailLabel);
 
-        corporationEmailText.setBounds(20 + 23 * width / 28, -5 + 2 * height / 5, width / 6, height / 20);
+        corporationEmailText.setBounds(20 + 23 * width / 28, -5 + 9 * height / 20, width / 6, height / 20);
         contentPane.add(corporationEmailText);
 
         //法人信息第二行
         corporationPinyinLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        corporationPinyinLabel.setBounds(20, -5 + 9 * height / 20, width / 14, height / 20);
+        corporationPinyinLabel.setBounds(20, -5 +  height / 2, width / 14, height / 20);
         contentPane.add(corporationPinyinLabel);
 
-        corporationPinyinText.setBounds(20 + width / 14, -5 + 9 * height / 20, width / 6, height / 20);
+        corporationPinyinText.setBounds(20 + width / 14, -5 +  height / 2, width / 6, height / 20);
         contentPane.add(corporationPinyinText);
 
         corporationIDLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        corporationIDLabel.setBounds(20 + 3 * width / 12, -5 + 9 * height / 20, width / 14, height / 20);
+        corporationIDLabel.setBounds(20 + 3 * width / 12, -5 +  height / 2, width / 14, height / 20);
         contentPane.add(corporationIDLabel);
 
-        corporationIDText.setBounds(20 + 9 * width / 28, -5 + 9 * height / 20, 3 * width / 7, height / 20);
+        corporationIDText.setBounds(20 + 9 * width / 28, -5 +  height / 2, 3 * width / 7, height / 20);
         contentPane.add(corporationIDText);
 
         corporationIDValidDateLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        corporationIDValidDateLabel.setBounds(20 + 3 * width / 4, -5 + 9 * height / 20, width / 14, height / 20);
+        corporationIDValidDateLabel.setBounds(20 + 3 * width / 4, -5 +  height / 2, width / 14, height / 20);
         contentPane.add(corporationIDValidDateLabel);
 
-        corporationIDValidDateText.setBounds(20 + 23 * width / 28, -5 + 9 * height / 20, width / 6, height / 20);
+        corporationIDValidDateText.setBounds(20 + 23 * width / 28, -5 +  height / 2, width / 6, height / 20);
         contentPane.add(corporationIDValidDateText);
 
         //财务主管信息
         financeManagerInfoLabel.setFont(new Font("微软雅黑", Font.BOLD, 20));
-        financeManagerInfoLabel.setBounds(20, -5 + height / 2, width / 5, height / 10);
+        financeManagerInfoLabel.setBounds(20, -5 + 11 * height / 20, width / 5, height / 10);
         contentPane.add(financeManagerInfoLabel);
 
         //财务主管信息第一行
         financeManagerNameLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        financeManagerNameLabel.setBounds(20, -5 + 3 * height / 5, width / 14, height / 20);
+        financeManagerNameLabel.setBounds(20, -5 + 13 * height / 20, width / 14, height / 20);
         contentPane.add(financeManagerNameLabel);
 
-        financeManagerNameText.setBounds(20 + width / 14, -5 + 3 * height / 5, width / 6, height / 20);
+        financeManagerNameText.setBounds(20 + width / 14, -5 + 13 * height / 20, width / 6, height / 20);
         contentPane.add(financeManagerNameText);
 
         financeManagerPhoneLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        financeManagerPhoneLabel.setBounds(20 + 3 * width / 12, -5 + 3 * height / 5, width / 14, height / 20);
+        financeManagerPhoneLabel.setBounds(20 + 3 * width / 12, -5 + 13 * height / 20, width / 14, height / 20);
         contentPane.add(financeManagerPhoneLabel);
 
-        financeManagerPhoneText.setBounds(20 + 9 * width / 28, -5 + 3 * height / 5, 3 * width / 7, height / 20);
+        financeManagerPhoneText.setBounds(20 + 9 * width / 28, -5 + 13 * height / 20, 3 * width / 7, height / 20);
         contentPane.add(financeManagerPhoneText);
 
         financeManagerEmailLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        financeManagerEmailLabel.setBounds(20 + 3 * width / 4, -5 + 3 * height / 5, width / 14, height / 20);
+        financeManagerEmailLabel.setBounds(20 + 3 * width / 4, -5 + 13 * height / 20, width / 14, height / 20);
         contentPane.add(financeManagerEmailLabel);
 
-        financeManagerEmailText.setBounds(20 + 23 * width / 28, -5 + 3 * height / 5, width / 6, height / 20);
+        financeManagerEmailText.setBounds(20 + 23 * width / 28, -5 + 13 * height / 20, width / 6, height / 20);
         contentPane.add(financeManagerEmailText);
 
         //财务主管信息第二行
         financeManagerPinyinLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        financeManagerPinyinLabel.setBounds(20, -5 + 13 * height / 20, width / 14, height / 20);
+        financeManagerPinyinLabel.setBounds(20, -5 + 14 * height / 20, width / 14, height / 20);
         contentPane.add(financeManagerPinyinLabel);
 
-        financeManagerPinyinText.setBounds(20 + width / 14, -5 + 13 * height / 20, width / 6, height / 20);
+        financeManagerPinyinText.setBounds(20 + width / 14, -5 + 14 * height / 20, width / 6, height / 20);
         contentPane.add(financeManagerPinyinText);
 
         financeManagerIDLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        financeManagerIDLabel.setBounds(20 + 3 * width / 12, -5 + 13 * height / 20, width / 14, height / 20);
+        financeManagerIDLabel.setBounds(20 + 3 * width / 12, -5 + 14 * height / 20, width / 14, height / 20);
         contentPane.add(financeManagerIDLabel);
 
-        financeManagerIDText.setBounds(20 + 9 * width / 28, -5 + 13 * height / 20, 3 * width / 7, height / 20);
+        financeManagerIDText.setBounds(20 + 9 * width / 28, -5 + 14 * height / 20, 3 * width / 7, height / 20);
         contentPane.add(financeManagerIDText);
 
         financeManagerIDValidDateLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        financeManagerIDValidDateLabel.setBounds(20 + 3 * width / 4, -5 + 13 * height / 20, width / 14, height / 20);
+        financeManagerIDValidDateLabel.setBounds(20 + 3 * width / 4, -5 + 14 * height / 20, width / 14, height / 20);
         contentPane.add(financeManagerIDValidDateLabel);
 
-        financeManagerIDValidDateText.setBounds(20 + 23 * width / 28, -5 + 13 * height / 20, width / 6, height / 20);
+        financeManagerIDValidDateText.setBounds(20 + 23 * width / 28, -5 + 14 * height / 20, width / 6, height / 20);
         contentPane.add(financeManagerIDValidDateText);
 
         //经办人信息
         operatorInfoLabel.setFont(new Font("微软雅黑", Font.BOLD, 20));
-        operatorInfoLabel.setBounds(20, -5 + 7 * height / 10, width / 5, height / 10);
+        operatorInfoLabel.setBounds(20, -5 + 3 * height / 4, width / 5, height / 10);
         contentPane.add(operatorInfoLabel);
 
         //经办人信息第一行
         operatorNameLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        operatorNameLabel.setBounds(20, -5 + 4 * height / 5, width / 14, height / 20);
+        operatorNameLabel.setBounds(20, -5 + 17 * height / 20, width / 14, height / 20);
         contentPane.add(operatorNameLabel);
 
-        operatorNameText.setBounds(20 + width / 14, -5 + 4 * height / 5, width / 6, height / 20);
+        operatorNameText.setBounds(20 + width / 14, -5 + 17 * height / 20, width / 6, height / 20);
         contentPane.add(operatorNameText);
 
         operatorPhoneLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        operatorPhoneLabel.setBounds(20 + 3 * width / 12, -5 + 4 * height / 5, width / 14, height / 20);
+        operatorPhoneLabel.setBounds(20 + 3 * width / 12, -5 + 17 * height / 20, width / 14, height / 20);
         contentPane.add(operatorPhoneLabel);
 
-        operatorPhoneText.setBounds(20 + 9 * width / 28, -5 + 4 * height / 5, 3 * width / 7, height / 20);
+        operatorPhoneText.setBounds(20 + 9 * width / 28, -5 + 17 * height / 20, 3 * width / 7, height / 20);
         contentPane.add(operatorPhoneText);
 
         operatorEmailLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        operatorEmailLabel.setBounds(20 + 3 * width / 4, -5 + 4 * height / 5, width / 14, height / 20);
+        operatorEmailLabel.setBounds(20 + 3 * width / 4, -5 + 17 * height / 20, width / 14, height / 20);
         contentPane.add(operatorEmailLabel);
 
-        operatorEmailText.setBounds(20 + 23 * width / 28, -5 + 4 * height / 5, width / 6, height / 20);
+        operatorEmailText.setBounds(20 + 23 * width / 28, -5 + 17 * height / 20, width / 6, height / 20);
         contentPane.add(operatorEmailText);
 
         //经办人信息第二行
         operatorPinyinLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        operatorPinyinLabel.setBounds(20, -5 + 17 * height / 20, width / 14, height / 20);
+        operatorPinyinLabel.setBounds(20, -5 + 18 * height / 20, width / 14, height / 20);
         contentPane.add(operatorPinyinLabel);
 
-        operatorPinyinText.setBounds(20 + width / 14, -5 + 17 * height / 20, width / 6, height / 20);
+        operatorPinyinText.setBounds(20 + width / 14, -5 + 18 * height / 20, width / 6, height / 20);
         contentPane.add(operatorPinyinText);
 
         operatorIDLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        operatorIDLabel.setBounds(20 + 3 * width / 12, -5 + 17 * height / 20, width / 14, height / 20);
+        operatorIDLabel.setBounds(20 + 3 * width / 12, -5 + 18 * height / 20, width / 14, height / 20);
         contentPane.add(operatorIDLabel);
 
-        operatorIDText.setBounds(20 + 9 * width / 28, -5 + 17 * height / 20, 3 * width / 7, height / 20);
+        operatorIDText.setBounds(20 + 9 * width / 28, -5 + 18 * height / 20, 3 * width / 7, height / 20);
         contentPane.add(operatorIDText);
 
         operatorIDValidDateLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
-        operatorIDValidDateLabel.setBounds(20 + 3 * width / 4, -5 + 17 * height / 20, width / 14, height / 20);
+        operatorIDValidDateLabel.setBounds(20 + 3 * width / 4, -5 + 18 * height / 20, width / 14, height / 20);
         contentPane.add(operatorIDValidDateLabel);
 
-        operatorIDValidDateText.setBounds(20 + 23 * width / 28, -5 + 17 * height / 20, width / 6, height / 20);
+        operatorIDValidDateText.setBounds(20 + 23 * width / 28, -5 + 18 * height / 20, width / 6, height / 20);
         contentPane.add(operatorIDValidDateText);
 
-        button.setBounds(5 * width / 12, 9 * height / 10, width / 6, height / 8);
+        button.setBounds(5 * width / 12, 19 * height / 20, width / 6, height / 10);
         button.setFont(new Font("微软雅黑", Font.BOLD, 12));
         button.addActionListener(this);
         contentPane.add(button);
@@ -479,15 +569,29 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
         client.setBizLicence(bizLicenceText.getText().trim());
         client.setOrgCode(orgCodeText.getText().trim());
         client.setBizLicenceValidDate(bizLicenceValidDateText.getText().trim());
-        client.setAdministration(Administration.getByName(administrationComboBox.getSelectedItem().toString().trim()));
+        String administration = administrationComboBox.getSelectedItem().toString().trim();
+        if (administration.equals("自定义")) {
+            administration = administrationText.getText().trim();
+        }
+        client.setAdministration(administration);
         client.setZhuceAddress(zhuceAddressText.getText().trim());
         client.setZhucePostalCode(zhuceAddressPostalCodeText.getText().trim());
         client.setBizScope(bizScopeText.getText().trim() + "等");
         client.setRegCapital(regCapitalText.getText().trim() + "万");
         client.setBangongAddress(bangongAddressText.getText().trim());
         client.setPhone(phoneText.getText().trim());
-        client.setType(CompanyType.getByType(typeComboBox.getSelectedItem().toString().trim()));
+        String type = typeComboBox.getSelectedItem().toString().trim();
+        if (type.equals("自定义")) {
+            type = typeText.getText().trim();
+        }
+        client.setType(type);
         client.setFoundDate(foundDateText.getText().trim());
+        String depositorType = depositorComboBox.getSelectedItem().toString().trim();
+        if (depositorType.equals("自定义")) {
+            depositorType = depositorText.getText().trim();
+        }
+        client.setDepositorType(depositorType);
+        client.setJingbanType(jingbanTypeComboBox.getSelectedItem().toString().trim());
         People corporation = new People();
         corporation.setName(corporationNameText.getText().trim());
         corporation.setPhone(corporationPhoneText.getText().trim());

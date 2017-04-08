@@ -50,13 +50,19 @@ public class CorporateClient {
     private String bizLicenceValidDate;
 
     //工商行政管理局
-    private Administration administration;
+    private String administration;
 
     //公司类型
-    private CompanyType type;
+    private String type;
 
     //成立日期
     private String foundDate;
+
+    //存款人类别
+    private String depositorType;
+
+    //开户经办
+    private String jingbanType;
 
     public String getCompanyName() {
         return companyName;
@@ -170,19 +176,19 @@ public class CorporateClient {
         this.bizLicenceValidDate = bizLicenceValidDate;
     }
 
-    public Administration getAdministration() {
+    public String getAdministration() {
         return administration;
     }
 
-    public void setAdministration(Administration administration) {
+    public void setAdministration(String administration) {
         this.administration = administration;
     }
 
-    public CompanyType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(CompanyType type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -192,5 +198,21 @@ public class CorporateClient {
 
     public void setFoundDate(String foundDate) {
         this.foundDate = foundDate;
+    }
+
+    public String getDepositorType() {
+        return depositorType;
+    }
+
+    public void setDepositorType(String depositorType) {
+        this.depositorType = depositorType;
+    }
+
+    public String getJingbanType() {
+        return jingbanType;
+    }
+
+    public void setJingbanType(String jingbanType) {
+        this.jingbanType = jingbanType;
     }
 }

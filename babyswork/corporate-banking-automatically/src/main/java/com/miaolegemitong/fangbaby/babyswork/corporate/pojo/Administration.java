@@ -23,7 +23,7 @@ public enum Administration {
     PINGGU("北京市工商行政管理局平谷分局", "101200"),
     YANQING("北京市工商行政管理局延庆分局", "102100"),
     MIYUN("北京市工商行政管理局密云分局", "101500"),
-    OTHER("其他", "100070");
+    OTHER("自定义", "100070");
 
     private String name;
 
