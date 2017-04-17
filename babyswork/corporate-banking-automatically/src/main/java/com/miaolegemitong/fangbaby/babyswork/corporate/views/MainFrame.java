@@ -1,10 +1,11 @@
 package com.miaolegemitong.fangbaby.babyswork.corporate.views;
 
-import com.miaolegemitong.fangbaby.babyswork.corporate.Main;
 import com.miaolegemitong.fangbaby.babyswork.corporate.excel.ExcelGenerator;
 import com.miaolegemitong.fangbaby.babyswork.corporate.pojo.*;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.*;
@@ -31,63 +32,63 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
 
     private JLabel companyNameLabel = new JLabel("公司名称");
 
-    private JTextField companyNameText = new JTextField();
+    private MyTextField companyNameText = new MyTextField();
 
     private JLabel companyAccountLabel = new JLabel("公司账号");
 
-    private JTextField companyAccountText = new JTextField();
+    private MyTextField companyAccountText = new MyTextField();
 
     private JLabel bizLicenceLabel = new JLabel("营业执照");
 
-    private JTextField bizLicenceText = new JTextField();
+    private MyTextField bizLicenceText = new MyTextField();
 
     private JLabel orgCodeLabel = new JLabel("机构代码");
 
-    private JTextField orgCodeText = new JTextField();
+    private MyTextField orgCodeText = new MyTextField();
 
     private JLabel bizLicenceValidDateLabel = new JLabel("证有效期");
 
-    private JTextField bizLicenceValidDateText = new JTextField();
+    private MyTextField bizLicenceValidDateText = new MyTextField();
 
     private JLabel administrationLabel = new JLabel("工商管局");
 
     private JComboBox<String> administrationComboBox = new JComboBox<>();
 
-    private JTextField administrationText = new JTextField();
+    private MyTextField administrationText = new MyTextField();
 
     private JLabel zhuceAddressLabel = new JLabel("注册地址");
 
-    private JTextField zhuceAddressText = new JTextField();
+    private MyTextField zhuceAddressText = new MyTextField();
 
     private JLabel zhuceAddressPostalCodeLabel = new JLabel("注册邮编");
 
-    private JTextField zhuceAddressPostalCodeText = new JTextField();
+    private MyTextField zhuceAddressPostalCodeText = new MyTextField();
 
     private JLabel bizScopeLabel = new JLabel("经营范围");
 
-    private JTextField bizScopeText = new JTextField();
+    private MyTextField bizScopeText = new MyTextField();
 
     private JLabel regCapitalLabel = new JLabel("注册资本");
 
-    private JTextField regCapitalText = new JTextField();
+    private MyTextField regCapitalText = new MyTextField();
 
     private JLabel bangongAddressLabel = new JLabel("办公地址");
 
-    private JTextField bangongAddressText = new JTextField();
+    private MyTextField bangongAddressText = new MyTextField();
 
     private JLabel phoneLabel = new JLabel("公司座机");
 
-    private JTextField phoneText = new JTextField();
+    private MyTextField phoneText = new MyTextField();
 
     private JLabel typeLabel = new JLabel("经济类型");
 
     public JComboBox<String> typeComboBox = new JComboBox<>();
 
-    public JTextField typeText = new JTextField();
+    public MyTextField typeText = new MyTextField();
 
     private JLabel foundDateLabel = new JLabel("成立日期");
 
-    private JTextField foundDateText = new JTextField();
+    private MyTextField foundDateText = new MyTextField();
 
     private JLabel jingbanTypeLabel = new JLabel("开户经办");
 
@@ -97,79 +98,79 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
 
     private JComboBox<String> depositorComboBox = new JComboBox<>();
 
-    public JTextField depositorText = new JTextField();
+    public MyTextField depositorText = new MyTextField();
 
     private JLabel financeManagerNameLabel = new JLabel("姓名");
 
-    private JTextField financeManagerNameText = new JTextField();
+    private MyTextField financeManagerNameText = new MyTextField();
 
     private JLabel financeManagerPinyinLabel = new JLabel("拼音");
 
-    private JTextField financeManagerPinyinText = new JTextField();
+    private MyTextField financeManagerPinyinText = new MyTextField();
 
     private JLabel financeManagerIDLabel = new JLabel("身份证号");
 
-    private JTextField financeManagerIDText = new JTextField();
+    private MyTextField financeManagerIDText = new MyTextField();
 
     private JLabel financeManagerIDValidDateLabel = new JLabel("有效期");
 
-    private JTextField financeManagerIDValidDateText = new JTextField();
+    private MyTextField financeManagerIDValidDateText = new MyTextField();
 
     private JLabel financeManagerPhoneLabel = new JLabel("手机号码");
 
-    private JTextField financeManagerPhoneText = new JTextField();
+    private MyTextField financeManagerPhoneText = new MyTextField();
 
     private JLabel financeManagerEmailLabel = new JLabel("邮箱");
 
-    private JTextField financeManagerEmailText = new JTextField();
+    private MyTextField financeManagerEmailText = new MyTextField();
 
     private JLabel corporationNameLabel = new JLabel("姓名");
 
-    private JTextField corporationNameText = new JTextField();
+    private MyTextField corporationNameText = new MyTextField();
 
     private JLabel corporationPinyinLabel = new JLabel("拼音");
 
-    private JTextField corporationPinyinText = new JTextField();
+    private MyTextField corporationPinyinText = new MyTextField();
 
     private JLabel corporationIDLabel = new JLabel("身份证号");
 
-    private JTextField corporationIDText = new JTextField();
+    private MyTextField corporationIDText = new MyTextField();
 
     private JLabel corporationIDValidDateLabel = new JLabel("有效期");
 
-    private JTextField corporationIDValidDateText = new JTextField();
+    private MyTextField corporationIDValidDateText = new MyTextField();
 
     private JLabel corporationPhoneLabel = new JLabel("手机号码");
 
-    private JTextField corporationPhoneText = new JTextField();
+    private MyTextField corporationPhoneText = new MyTextField();
 
     private JLabel corporationEmailLabel = new JLabel("邮箱");
 
-    private JTextField corporationEmailText = new JTextField();
+    private MyTextField corporationEmailText = new MyTextField();
 
     private JLabel operatorNameLabel = new JLabel("姓名");
 
-    private JTextField operatorNameText = new JTextField();
+    private MyTextField operatorNameText = new MyTextField();
 
     private JLabel operatorPinyinLabel = new JLabel("拼音");
 
-    private JTextField operatorPinyinText = new JTextField();
+    private MyTextField operatorPinyinText = new MyTextField();
 
     private JLabel operatorIDLabel = new JLabel("身份证号");
 
-    private JTextField operatorIDText = new JTextField();
+    private MyTextField operatorIDText = new MyTextField();
 
     private JLabel operatorIDValidDateLabel = new JLabel("有效期");
 
-    private JTextField operatorIDValidDateText = new JTextField();
+    private MyTextField operatorIDValidDateText = new MyTextField();
 
     private JLabel operatorPhoneLabel = new JLabel("手机号码");
 
-    private JTextField operatorPhoneText = new JTextField();
+    private MyTextField operatorPhoneText = new MyTextField();
 
     private JLabel operatorEmailLabel = new JLabel("邮箱");
 
-    private JTextField operatorEmailText = new JTextField();
+    private MyTextField operatorEmailText = new MyTextField();
 
     private JButton button = new JButton("导出Excel表");
 
@@ -577,7 +578,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
         client.setZhuceAddress(zhuceAddressText.getText().trim());
         client.setZhucePostalCode(zhuceAddressPostalCodeText.getText().trim());
         client.setBizScope(bizScopeText.getText().trim() + "等");
-        client.setRegCapital(regCapitalText.getText().trim() + "万");
+        client.setRegCapital(regCapitalText.getText().trim() + "万元");
         client.setBangongAddress(bangongAddressText.getText().trim());
         client.setPhone(phoneText.getText().trim());
         String type = typeComboBox.getSelectedItem().toString().trim();
@@ -621,7 +622,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
         FileSystemView fsv = FileSystemView.getFileSystemView();
         File home = fsv.getHomeDirectory();
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        if (ExcelGenerator.generateExcelFile(client, home.getPath() + File.separator + date + "_" + client.getCompanyName() + ".xls")) {
+        if (new ExcelGenerator().generateExcelFile(client, home.getPath() + File.separator + date + "_" + client.getCompanyName() + ".xls")) {
             JOptionPane.showMessageDialog(this.getContentPane(), "导出成功！");
         } else {
             JOptionPane.showMessageDialog(this.getContentPane(), "导出失败！");

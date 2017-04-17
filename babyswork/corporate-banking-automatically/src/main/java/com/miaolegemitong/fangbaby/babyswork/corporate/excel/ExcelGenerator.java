@@ -17,9 +17,9 @@ import java.io.*;
  * @description
  */
 public class ExcelGenerator {
-    private static HSSFWorkbook template;
+    private HSSFWorkbook template;
 
-    static {
+    public ExcelGenerator() {
         try {
             FileSystemView fsv = FileSystemView.getFileSystemView();
             String templatePath = fsv.getHomeDirectory().getPath() + File.separator + "excel-template.xls";
@@ -31,7 +31,7 @@ public class ExcelGenerator {
         }
     }
 
-    public static boolean generateExcelFile(CorporateClient client, String path) {
+    public boolean generateExcelFile(CorporateClient client, String path) {
         if (template == null || client == null || path == null || "".equals(path)) {
             return false;
         }
@@ -195,7 +195,7 @@ public class ExcelGenerator {
         }
     }
 
-    public static void main(String[] args) {
-        generateExcelFile(null, "/Users/milton/template.xls");
-    }
+//    public static void main(String[] args) {
+//        generateExcelFile(null, "/Users/milton/template.xls");
+//    }
 }
