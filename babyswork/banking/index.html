@@ -1,0 +1,1514 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>对公业务自动办公系统</title>
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <script src="plugin/assets/js/jquery-1.12.4.js"></script>
+
+    <script src="plugin/assets/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="plugin/assets/css/bootstrap.css"/>
+
+    <!--&lt;!&ndash;<link rel="stylesheet" href="plugin/assets/css/fonts/linecons/css/linecons.css"/>&ndash;&gt;-->
+    <!--&lt;!&ndash;<link rel="stylesheet" href="plugin/assets/css/fonts/fontawesome/css/font-awesome.min.css"/>&ndash;&gt;-->
+    <link rel="stylesheet" href="plugin/assets/css/xenon-core.css">
+    <link rel="stylesheet" href="plugin/assets/css/xenon-forms.css">
+    <link rel="stylesheet" href="plugin/assets/css/xenon-components.css">
+    <link rel="stylesheet" href="plugin/assets/css/xenon-skins.css">
+    <!--<link rel="stylesheet" href="plugin/assets/css/custom.css">-->
+    <!--<link rel="stylesheet" href="plugin/assets/css/fonts/meteocons/css/meteocons.css">-->
+    <link rel="stylesheet" href="plugin/assets/js/toastr/toastr.min.css">
+    <script src="plugin/assets/js/toastr/toastr.min.js"></script>
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function () {
+            $('#menudiv').hide();
+            $('#create').hide();
+            $('#change').hide();
+            $('#delete').hide();
+
+            $('#pwd').bind('keydown', function (event) {
+                if (event.keyCode == "13") {
+                    pass();
+                }
+            });
+
+            Date.prototype.Format = function (fmt) { //author: meizz
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
+        });
+
+        var passed = false;
+
+        //<span style="margin-left:30px"><input name="sheets" type="checkbox" value="1" checked/>开户申请书上</span>
+        //        <span><input name="sheets" type="checkbox" value="2" checked/>开户申请书下网银新</span>
+        //        <span><input name="sheets" type="checkbox" value="3" checked/>开户申请书下新</span>
+        //        <span><input name="sheets" type="checkbox" value="4" checked/>开户申请书背面</span>
+        //        <span><input name="sheets" type="checkbox" value="5" checked/>信用代码申请表</span>
+        //        <span><input name="sheets" type="checkbox" value="6" checked/>授权书正</span>
+        //        <span><input name="sheets" type="checkbox" value="7" checked/>授权书背</span>
+        //        <span><input name="sheets" type="checkbox" value="8" checked/>已开立帐户清单</span>
+        //        <span><input name="sheets" type="checkbox" value="9" checked/>服务告知函</span>
+        //        <span><input name="sheets" type="checkbox" value="10" checked/>印鉴卡</span>
+        //        <span><input name="sheets" type="checkbox" value="11" checked/>上表头</span>
+        //        <br/>
+        //        <span style="margin-left:30px"><input name="sheets" type="checkbox" value="12" checked/>服务协议</span>
+        //        <span><input name="sheets" type="checkbox" value="13" checked/>信息收集表</span>
+        //        <span><input name="sheets" type="checkbox" value="14" checked/>结算卡申请</span>
+        //        <span><input name="sheets" type="checkbox" value="15" checked/>结算卡关联</span>
+        //        <span><input name="sheets" type="checkbox" value="16" checked/>开户申请书上级</span>
+        //        <span><input name="sheets" type="checkbox" value="17" checked/>机构信用代码申请表上级</span>
+        //        <span><input name="sheets" type="checkbox" value="18"/>蓝特</span>
+        //            <span><input name="sheets" type="checkbox" value="19"/>网银</span>
+        //            <span><input name="sheets" type="checkbox" value="20"/>变更申请书</span>
+        //            <span><input name="sheets" type="checkbox" value="21"/>销户申请书</span>
+        //            <span><input name="sheets" type="checkbox" value="22"/>补换发开户许可证</span>
+        function createAccount() {
+            var pnsys = new ActiveXObject("WScript.shell");
+            var userName = pnsys.Environment("PROCESS")("USERNAME");
+            var path = "C:\\Users\\" + userName + "\\Desktop\\excel-template.xls";
+            toastr.info(path);
+            var excelApp;
+            var excelWorkBook;
+            var chk_value = [];//定义一个数组
+            $('input[name="sheets"]:checked').each(function () {//遍历每一个名字为nodes的复选框，其中选中的执行函数
+                chk_value.push($(this).val());//将选中的值添加到数组chk_value中
+            });
+            var corName = $('#corName').val();
+            var corAccount = $('#corAccount').val();
+            var busiLicense = $('#busiLicense').val();
+            var orgCode = $('#orgCode').val();
+            var ecoType = $('#ecoType').val();
+            if (ecoType == '1') {
+                ecoType = $('#defEcoType').val();
+            }
+            var insType = $('#insType').val();
+            if (insType == '1') {
+                insType = $('#defInsType').val();
+            }
+            var regAddress = $('#regAddress').val();
+            var authority = $('#authority').val();
+            if (authority == '1') {
+                authority = $('#defAuthority').val();
+            }
+            var postCode = $('#postCode').val();
+            var workAddress = $('#workAddress').val();
+            var busiDate = $('#busiDate').val();
+            var estabDate = $('#estabDate').val();
+            var busiScope = $('#busiScope').val() + '等';
+            var regCash = $('#regCash').val() + '万元';
+            var creditCode = $('#creditCode').val();
+            var estabPermission = $('#estabPermission').val();
+            var locateCode = $('#locateCode').val();
+            if (locateCode == '1') {
+                locateCode = $('#defLocateCode').val();
+            }
+            var accountSign = $('#accountSign').val();
+            if (accountSign == '1') {
+                accountSign = $('#defAccountSign').val();
+            }
+            var agent = $('#agent').val();
+            var phone = $('#phone').val();
+            var cusCode = $('#cusCode').val();
+            var legalName = $('#legalName').val();
+            var legalCode = $('#legalCode').val();
+            var legalExpire = $('#legalExpire').val();
+            var legalPinyin = $('#legalPinyin').val();
+            var legalPhone = $('#legalPhone').val();
+            var legalMail = $('#legalMail').val();
+            var managerName = $('#managerName').val();
+            var managerCode = $('#managerCode').val();
+            var managerExpire = $('#managerExpire').val();
+            var managerPinyin = $('#managerPinyin').val();
+            var managerPhone = $('#managerPhone').val();
+            var managerMail = $('#managerMail').val();
+            if (managerName == null || managerName == undefined || managerName == '') {
+                managerName = legalName;
+                managerCode = legalCode;
+                managerExpire = legalExpire;
+                managerPinyin = legalPinyin;
+                managerPhone = legalPhone;
+                managerMail = legalMail;
+            }
+            var accountantName = $('#accountantName').val();
+            var accountantCode = $('#accountantCode').val();
+            var accountantExpire = $('#accountantExpire').val();
+            var accountantPinyin = $('#accountantPinyin').val();
+            var accountantPhone = $('#accountantPhone').val();
+            var accountantMail = $('#accountantMail').val();
+            var agentName = $('#agentName').val();
+            var agentCode = $('#agentCode').val();
+            var agentExpire = $('#agentExpire').val();
+            var agentPinyin = $('#agentPinyin').val();
+            var agentPhone = $('#agentPhone').val();
+            var agentMail = $('#agentMail').val();
+            var bossName = $('#bossName').val();
+            var bossCertType = $('#bossCertType').val();
+            if (bossCertType == '1') {
+                bossCertType = $('#defBossCertType').val();
+            }
+            var bossCode = $('#bossCode').val();
+            var bossExpire = $('#bossExpire').val();
+            if (bossName == null || bossName == undefined || bossName == '') {
+                bossName = legalName;
+                bossCertType = '身份证';
+                bossCode = legalCode;
+                bossExpire = legalExpire;
+            }
+            var superiorName = $('#superiorName').val();
+            var superiorCode = $('#superiorCode').val();
+            var superiorPermission = $('#superiorPermission').val();
+            var superiorLicense = $('#superiorLicense').val();
+            var superiorCreditCode = $('#superiorCreditCode').val();
+            var superiorPhone = $('#superiorPhone').val();
+            var superiorLegalName = $('#superiorLegalName').val();
+            var superiorCertType = $('#superiorCertType').val();
+            if (superiorCertType == '1') {
+                superiorCertType = $('#defSuperiorCertType').val();
+            }
+            var superiorCertCode = $('#superiorCertCode').val();
+            var superiorExpire = $('#superiorExpire').val();
+            var wygl = $('input[name=wygl]:checked').val();
+            var wycz = $('input[name=wycz]:checked').val();
+            var wyglName = '';
+            var wyglPinyin = '';
+            var wyglCode = '';
+            var wyglPhone = '';
+            var wyglMail = '';
+            var wyglExpire = '';
+            var wyczName = '';
+            var wyczPinyin = '';
+            var wyczCode = '';
+            var wyczPhone = '';
+            var wyczMail = '';
+            var wyczExpire = '';
+            if (wygl == '1') {
+                wyglName = legalName;
+                wyglPinyin = legalPinyin;
+                wyglCode = legalCode;
+                wyglPhone = legalPhone;
+                wyglMail = legalMail;
+                wyglExpire = legalExpire;
+            } else if (wygl == '4') {
+                wyglName = agentName;
+                wyglPinyin = agentPinyin;
+                wyglCode = agentCode;
+                wyglPhone = agentPhone;
+                wyglMail = agentMail;
+                wyglExpire = agentExpire;
+            } else if (wygl == '3') {
+                wyglName = accountantName;
+                wyglPinyin = accountantPinyin;
+                wyglCode = accountantCode;
+                wyglPhone = accountantPhone;
+                wyglMail = accountantMail;
+                wyglExpire = accountantExpire;
+            } else {
+                wyglName = managerName;
+                wyglPinyin = managerPinyin;
+                wyglCode = managerCode;
+                wyglPhone = managerPhone;
+                wyglMail = managerMail;
+                wyglExpire = managerExpire;
+            }
+            if (wycz == '1') {
+                wyczName = legalName;
+                wyczPinyin = legalPinyin;
+                wyczCode = legalCode;
+                wyczPhone = legalPhone;
+                wyczMail = legalMail;
+                wyczExpire = legalExpire;
+            } else if (wycz == '2') {
+                wyczName = managerName;
+                wyczPinyin = managerPinyin;
+                wyczCode = managerCode;
+                wyczPhone = managerPhone;
+                wyczMail = managerMail;
+                wyczExpire = managerExpire;
+            } else if (wycz == '4') {
+                wyczName = agentName;
+                wyczPinyin = agentPinyin;
+                wyczCode = agentCode;
+                wyczPhone = agentPhone;
+                wyczMail = agentMail;
+                wyczExpire = agentExpire;
+            } else {
+                wyczName = accountantName;
+                wyczPinyin = accountantPinyin;
+                wyczCode = accountantCode;
+                wyczPhone = accountantPhone;
+                wyczMail = accountantMail;
+                wyczExpire = accountantExpire;
+            }
+            var khjbName = '';
+            var khjbPinyin = '';
+            var khjbCode = '';
+            var khjbPhone = '';
+            var khjbMail = '';
+            var khjbExpire = '';
+            if (agent == '2') {
+                khjbName = managerName;
+                khjbPinyin = managerPinyin;
+                khjbCode = managerCode;
+                khjbPhone = managerPhone;
+                khjbMail = managerMail;
+                khjbExpire = managerExpire;
+            } else if (agent == '3') {
+                khjbName = accountantName;
+                khjbPinyin = accountantPinyin;
+                khjbCode = accountantCode;
+                khjbPhone = accountantPhone;
+                khjbMail = accountantMail;
+                khjbExpire = accountantExpire;
+            } else if (agent == '4') {
+                khjbName = agentName;
+                khjbPinyin = agentPinyin;
+                khjbCode = agentCode;
+                khjbPhone = agentPhone;
+                khjbMail = agentMail;
+                khjbExpire = agentExpire;
+            } else {
+                khjbName = legalName;
+                khjbPinyin = legalPinyin;
+                khjbCode = legalCode;
+                khjbPhone = legalPhone;
+                khjbMail = legalMail;
+                khjbExpire = legalExpire;
+            }
+            try {
+                excelApp = new ActiveXObject("Excel.Application");
+                excelWorkBook = excelApp.Workbooks.open(path);
+                for (var i = 0; i < chk_value.length; i++) {
+                    var index = chk_value[i];
+                    if (index == '1') {
+                        var excelSheet1 = excelWorkBook.Worksheets('开户申请书上');
+                        excelSheet1.Cells(2, 2).value = corName;
+                        excelSheet1.Cells(2, 7).value = phone;
+                        excelSheet1.Cells(3, 2).value = regAddress;
+                        excelSheet1.Cells(3, 7).value = postCode;
+                        excelSheet1.Cells(4, 2).value = insType;
+                        excelSheet1.Cells(4, 5).value = orgCode;
+                        excelSheet1.Cells(4, 7).value = locateCode;
+                        excelSheet1.Cells(5, 3).value = legalName;
+                        excelSheet1.Cells(5, 5).value = phone;
+                        excelSheet1.Cells(5, 6).value = legalPhone;
+                        excelSheet1.Cells(6, 5).value = legalCode;
+                        excelSheet1.Cells(6, 7).value = legalExpire;
+                        excelSheet1.Cells(7, 4).value = managerName;
+                        excelSheet1.Cells(7, 5).value = phone;
+                        excelSheet1.Cells(7, 6).value = managerPhone;
+                        excelSheet1.Cells(8, 5).value = managerCode;
+                        excelSheet1.Cells(8, 7).value = managerExpire;
+                        excelSheet1.Cells(9, 4).value = accountantName;
+                        excelSheet1.Cells(9, 6).value = accountantPhone;
+                        excelSheet1.Cells(10, 5).value = accountantCode;
+                        excelSheet1.Cells(10, 7).value = accountantExpire;
+                        excelSheet1.Cells(11, 3).value = bossName;
+                        excelSheet1.Cells(11, 7).value = bossCertType;
+                        excelSheet1.Cells(12, 3).value = bossCode;
+                        excelSheet1.Cells(12, 7).value = bossExpire;
+                        excelSheet1.Cells(13, 7).value = regCash;
+                        excelSheet1.Cells(14, 2).value = busiScope;
+                        excelSheet1.Cells(15, 5).value = busiLicense;
+                        excelSheet1.Cells(15, 7).value = busiDate;
+                        excelSheet1.Cells(17, 2).value = busiLicense;
+                        excelSheet1.Cells(17, 5).value = creditCode;
+                        if (insType == '有字号的个体工商户') {
+                            //1-黑色，2-白色，3-红色，4-绿色，5-蓝色，6-黄色，7-粉红色，8-天蓝色，9-酱土色
+                            excelSheet1.Cells(4, 5).Font.ColorIndex = 2;
+                            excelSheet1.Cells(13, 7).Font.ColorIndex = 2;
+                        }
+                        if (creditCode == null || creditCode == undefined || creditCode == '') {
+                            excelSheet1.Cells(17, 5).Font.ColorIndex = 2;
+                        }
+                        if (regCash == null || regCash == undefined || regCash == '万元') {
+                            excelSheet1.Cells(13, 7).Font.ColorIndex = 2;
+                        }
+                    } else if (index == '2') {
+                        var excelSheet2 = excelWorkBook.Worksheets('开户申请书下网银新');
+                        excelSheet2.Cells(37, 2).value = wyglName;
+                        excelSheet2.Cells(37, 3).value = wyglPinyin;
+                        excelSheet2.Cells(37, 5).value = wyglCode;
+                        excelSheet2.Cells(37, 7).value = wyglPhone;
+                        excelSheet2.Cells(37, 8).value = wyglMail;
+                        excelSheet2.Cells(38, 2).value = wyczName;
+                        excelSheet2.Cells(38, 3).value = wyczPinyin;
+                        excelSheet2.Cells(38, 5).value = wyczCode;
+                        excelSheet2.Cells(38, 7).value = wyczPhone;
+                        excelSheet2.Cells(38, 8).value = wyczMail;
+                    } else if (index == '3') {
+                        var excelSheet3 = excelWorkBook.Worksheets('开户申请书下新');
+                        excelSheet3.Cells(42, 8).value = corName;
+                        excelSheet3.Cells(43, 2).value = corAccount;
+                        if (corAccount == null || corAccount == undefined || corAccount == '') {
+                            excelSheet3.Cells(43, 2).Font.ColorIndex = 2;
+                        }
+                        excelSheet3.Cells(43, 6).value = estabPermission;
+                        if (estabPermission == null || estabPermission == undefined || estabPermission == '') {
+                            excelSheet3.Cells(43, 6).Font.ColorIndex = 2;
+                        }
+                    } else if (index == '4') {
+                        var excelSheet4 = excelWorkBook.Worksheets('开户申请书背面');
+                        excelSheet4.Cells(2, 2).value = corName;
+                        excelSheet4.Cells(7, 3).value = corName;
+                        excelSheet4.Cells(8, 3).value = corAccount;
+                        if (corAccount == null || corAccount == undefined || corAccount == '') {
+                            excelSheet4.Cells(8, 3).Font.ColorIndex = 2;
+                        }
+                    } else if (index == '5') {
+                        var excelSheet5 = excelWorkBook.Worksheets('信用代码申请表');
+                        excelSheet5.Cells(2, 3).value = corName;
+                        excelSheet5.Cells(3, 3).value = regAddress;
+                        excelSheet5.Cells(4, 3).value = authority;
+                        excelSheet5.Cells(4, 7).value = insType;
+                        excelSheet5.Cells(5, 7).value = busiLicense;
+                        excelSheet5.Cells(6, 3).value = busiLicense;
+                        excelSheet5.Cells(6, 7).value = busiLicense;
+                        excelSheet5.Cells(7, 3).value = estabPermission;
+                        if (estabPermission == null || estabPermission == undefined || estabPermission == '') {
+                            excelSheet5.Cells(7, 3).Font.ColorIndex = 2;
+                        }
+                        excelSheet5.Cells(7, 7).value = orgCode;
+                        if (insType == '有字号的个体工商户') {
+                            //1-黑色，2-白色，3-红色，4-绿色，5-蓝色，6-黄色，7-粉红色，8-天蓝色，9-酱土色
+                            excelSheet5.Cells(7, 7).Font.ColorIndex = 2;
+                        }
+                        excelSheet5.Cells(8, 3).value = ecoType;
+                        excelSheet5.Cells(8, 7).value = estabDate;
+                        excelSheet5.Cells(9, 7).value = regCash;
+                        if (insType == '有字号的个体工商户' || regCash == null || regCash == undefined || regCash == '万元') {
+                            excelSheet5.Cells(9, 3).Font.ColorIndex = 2;
+                            excelSheet5.Cells(9, 7).Font.ColorIndex = 2;
+                        }
+                        excelSheet5.Cells(10, 3).value = workAddress;
+                        excelSheet5.Cells(10, 7).value = phone;
+                        excelSheet5.Cells(12, 3).value = legalName;
+                        excelSheet5.Cells(12, 7).value = legalCode;
+                    } else if (index == '6') {
+                        var excelSheet6 = excelWorkBook.Worksheets('授权书正');
+                        excelSheet6.Cells(3, 2).value = corName;
+                        excelSheet6.Cells(3, 9).value = legalName;
+                        excelSheet6.Cells(4, 4).value = legalCode;
+                        excelSheet6.Cells(4, 8).value = legalExpire;
+                        excelSheet6.Cells(5, 7).value = corAccount;
+                        if (corAccount == null || corAccount == undefined || corAccount == '') {
+                            excelSheet6.Cells(5, 7).Font.ColorIndex = 2;
+                        }
+                        excelSheet6.Cells(6, 2).value = khjbName;
+                        excelSheet6.Cells(7, 1).value = khjbCode;
+                        excelSheet6.Cells(7, 5).value = khjbExpire;
+                        excelSheet6.Cells(7, 8).value = khjbPhone;
+                        excelSheet6.Cells(26, 3).value = legalName;
+                        excelSheet6.Cells(27, 3).value = legalCode;
+                        excelSheet6.Cells(27, 7).value = legalExpire;
+                    } else if (index == '7') {
+                        var excelSheet7 = excelWorkBook.Worksheets('授权书背');
+                        excelSheet7.Cells(2, 3).value = wyglName;
+                        excelSheet7.Cells(3, 3).value = wyglCode;
+                        excelSheet7.Cells(3, 6).value = wyglExpire;
+                        excelSheet7.Cells(4, 3).value = wyglPhone;
+                        excelSheet7.Cells(4, 6).value = wyglMail;
+                        excelSheet7.Cells(6, 3).value = wyczName;
+                        excelSheet7.Cells(7, 3).value = wyczCode;
+                        excelSheet7.Cells(7, 6).value = wyczExpire;
+                        excelSheet7.Cells(8, 3).value = wyczPhone;
+                        excelSheet7.Cells(8, 6).value = wyczMail;
+                    } else if (index == '8') {
+                        var excelSheet8 = excelWorkBook.Worksheets('已开立帐户清单');
+                        excelSheet8.Cells(2, 6).value = corName;
+                        excelSheet8.Cells(3, 6).value = estabPermission;
+                        if (estabPermission == null || estabPermission == undefined || estabPermission == '') {
+                            excelSheet8.Cells(3, 6).Font.ColorIndex = 2;
+                        }
+                    } else if (index == '9') {
+                        var excelSheet9 = excelWorkBook.Worksheets('服务告知函');
+                        excelSheet9.Cells(2, 2).value = corName;
+                        excelSheet9.Cells(3, 4).value = corAccount;
+                        if (corAccount == null || corAccount == undefined || corAccount == '') {
+                            excelSheet9.Cells(3, 4).Font.ColorIndex = 2;
+                        }
+                        excelSheet9.Cells(6, 2).value = khjbPhone;
+                    } else if (index == '10') {
+                        var excelSheet10 = excelWorkBook.Worksheets('印鉴卡');
+                        excelSheet10.Cells(2, 2).value = corName;
+                        excelSheet10.Cells(2, 7).value = corAccount;
+                        if (corAccount == null || corAccount == undefined || corAccount == '') {
+                            excelSheet10.Cells(2, 7).Font.ColorIndex = 2;
+                        }
+                    } else if (index == '11') {
+                        var excelSheet11 = excelWorkBook.Worksheets('上表头');
+                        excelSheet11.Cells(1, 3).value = accountSign;
+                        excelSheet11.Cells(1, 4).value = cusCode;
+                        excelSheet11.Cells(2, 5).value = creditCode;
+                        if (creditCode == null || creditCode == undefined || creditCode == '') {
+                            excelSheet11.Cells(2, 5).Font.ColorIndex = 2;
+                            excelSheet11.Cells(2, 3).Font.ColorIndex = 2;
+                        }
+                    } else if (index == '12') {
+                        var excelSheet12 = excelWorkBook.Worksheets('服务协议');
+                        excelSheet12.Cells(2, 2).value = corName;
+                        excelSheet12.Cells(3, 2).value = regAddress;
+                        excelSheet12.Cells(4, 4).value = legalName;
+                        excelSheet12.Cells(4, 7).value = postCode;
+                        excelSheet12.Cells(5, 3).value = khjbName;
+                        excelSheet12.Cells(5, 7).value = khjbPhone;
+                        excelSheet12.Cells(18, 3).value = corName;
+                        excelSheet12.Cells(19, 3).value = corAccount;
+                        if (corAccount == null || corAccount == undefined || corAccount == '') {
+                            excelSheet12.Cells(19, 3).Font.ColorIndex = 2;
+                        }
+                    } else if (index == '13') {
+                        var excelSheet13 = excelWorkBook.Worksheets('信息收集表');
+                        excelSheet13.Cells(2, 2).value = corName;
+                        excelSheet13.Cells(2, 7).value = phone;
+                        excelSheet13.Cells(3, 7).value = postCode;
+                        excelSheet13.Cells(7, 7).value = locateCode;
+                        if (regAddress != workAddress) {
+                            excelSheet13.Cells(4, 2).value = workAddress;
+                            excelSheet13.Cells(6, 2).value = workAddress;
+                        }
+                        excelSheet13.Cells(8, 4).value = managerName;
+                        excelSheet13.Cells(8, 6).value = "座机：" + phone + " 手机：" + managerPhone;
+                        excelSheet13.Cells(10, 4).value = accountantName;
+                        excelSheet13.Cells(10, 6).value = "座机：" + phone + " 手机：" + accountantPhone;
+                        excelSheet13.Cells(13, 4).value = legalName + " " + (legalPhone == null || legalPhone == undefined || legalPhone == '' ? phone : legalPhone);
+                        excelSheet13.Cells(15, 4).value = bossName;
+                        excelSheet13.Cells(15, 7).value = bossCertType;
+                        excelSheet13.Cells(16, 4).value = bossCode;
+                        excelSheet13.Cells(16, 7).value = bossExpire;
+                        excelSheet13.Cells(17, 3).value = superiorName;
+                        if (superiorName == null || superiorName == undefined || superiorName == '') {
+                            excelSheet13.Cells(17, 3).Font.ColorIndex = 2;
+                        }
+                        excelSheet13.Cells(18, 3).value = superiorPermission;
+                        if (superiorPermission == null || superiorPermission == undefined || superiorPermission == '') {
+                            excelSheet13.Cells(18, 3).Font.ColorIndex = 2;
+                        }
+                        excelSheet13.Cells(18, 6).value = superiorCode;
+                        if (superiorCode == null || superiorCode == undefined || superiorCode == '') {
+                            excelSheet13.Cells(18, 6).Font.ColorIndex = 2;
+                        }
+                        excelSheet13.Cells(19, 6).value = superiorCertType + " " + superiorCertCode;
+                        if (superiorLegalName == null || superiorLegalName == undefined || superiorLegalName == '') {
+                            excelSheet13.Cells(19, 6).Font.ColorIndex = 2;
+                            excelSheet13.Cells(20, 4).Font.ColorIndex = 2;
+                            excelSheet13.Cells(20, 6).Font.ColorIndex = 2;
+                        }
+                        excelSheet13.Cells(20, 4).value = superiorLegalName;
+                        excelSheet13.Cells(20, 6).value = superiorExpire;
+                    } else if (index == '14') {
+                        var excelSheet14 = excelWorkBook.Worksheets('结算卡申请');
+                        excelSheet14.Cells(6, 2).value = corName;
+                        excelSheet14.Cells(7, 2).value = corAccount;
+                        if (corAccount == null || corAccount == undefined || corAccount == '') {
+                            excelSheet14.Cells(7, 2).Font.ColorIndex = 2;
+                        }
+                        excelSheet14.Cells(7, 7).value = accountSign;
+                        excelSheet14.Cells(9, 2).value = legalName;
+                        excelSheet14.Cells(9, 7).value = legalCode;
+                        excelSheet14.Cells(10, 2).value = khjbName;
+                        excelSheet14.Cells(10, 7).value = khjbCode;
+                        if (agent == '1') {
+                            excelSheet14.Cells(10, 2).Font.ColorIndex = 2;
+                            excelSheet14.Cells(10, 5).Font.ColorIndex = 2;
+                            excelSheet14.Cells(10, 7).Font.ColorIndex = 2;
+                        }
+                    } else if (index == '15') {
+                        var excelSheet15 = excelWorkBook.Worksheets('结算卡关联');
+                        excelSheet15.Cells(4, 2).value = corName;
+                        excelSheet15.Cells(5, 2).value = legalName;
+                        excelSheet15.Cells(10, 2).value = corAccount;
+                        if (corAccount == null || corAccount == undefined || corAccount == '') {
+                            excelSheet14.Cells(10, 2).Font.ColorIndex = 2;
+                        }
+                    } else if (index == '16') {
+                        var excelSheet16 = excelWorkBook.Worksheets('开户申请书上级');
+                        excelSheet16.Cells(17, 3).value = superiorName;
+                        excelSheet16.Cells(18, 3).value = superiorPermission;
+                        excelSheet16.Cells(18, 6).value = superiorCode;
+                        excelSheet16.Cells(19, 3).value = superiorLegalName;
+                        excelSheet16.Cells(19, 6).value = superiorCertType;
+                        excelSheet16.Cells(20, 3).value = superiorCertCode;
+                        excelSheet16.Cells(20, 6).value = superiorExpire;
+                        if (superiorName == null || superiorName == undefined || superiorName == '') {
+                            excelSheet16.Cells(17, 3).Font.ColorIndex = 2;
+                            excelSheet16.Cells(18, 3).Font.ColorIndex = 2;
+                            excelSheet16.Cells(18, 6).Font.ColorIndex = 2;
+                            excelSheet16.Cells(19, 3).Font.ColorIndex = 2;
+                            excelSheet16.Cells(19, 6).Font.ColorIndex = 2;
+                            excelSheet16.Cells(20, 3).Font.ColorIndex = 2;
+                            excelSheet16.Cells(20, 6).Font.ColorIndex = 2;
+                        }
+                    } else if (index == '17') {
+                        var excelSheet17 = excelWorkBook.Worksheets('机构信用代码申请表上级');
+                        excelSheet17.Cells(34, 4).value = superiorName;
+                        excelSheet17.Cells(36, 7).value = superiorLicense;
+                        excelSheet17.Cells(39, 3).value = superiorCreditCode;
+                        excelSheet17.Cells(39, 7).value = superiorCode;
+                        if (superiorName == null || superiorName == undefined || superiorName == '') {
+                            excelSheet17.Cells(34, 4).Font.ColorIndex = 2;
+                            excelSheet17.Cells(36, 7).Font.ColorIndex = 2;
+                            excelSheet17.Cells(39, 3).Font.ColorIndex = 2;
+                            excelSheet17.Cells(39, 7).Font.ColorIndex = 2;
+                        }
+                    }
+                }
+                var fileName = new Date().Format("yyyy年MM月dd日HH时mm分ss秒") + "_" + corName;
+                excelWorkBook.saveAs("C:\\Users\\" + userName + "\\Desktop\\" + fileName + ".xls");
+                excelWorkBook.close();
+                excelApp.Application.Quit();
+                excelApp = null;
+            } catch (e) {
+                toastr.error(e);
+                if (excelApp == null || excelApp == undefined) {
+                    toastr.error('Excel程序启动不成功!');
+                }
+                if (excelWorkBook == null || excelWorkBook == undefined) {
+                    toastr.error('没有找到excel文件!');
+                }
+                if (excelWorkBook != null && excelWorkBook != undefined) {
+                    excelWorkBook.close();
+                }
+                if (excelApp != null && excelApp != undefined) {
+                    excelApp.Application.Quit();
+                    excelApp = null;
+                }
+            }
+        }
+
+        function pass() {
+            passed = $('#pwd').val() == '0000126608';
+            if (passed) {
+                $('#login-panel').hide();
+                $('#menudiv').show();
+                $('#create').show();
+            } else {
+                toastr.error('登录失败');
+            }
+        }
+
+        function resetPwd() {
+            $('#pwd').val('');
+        }
+
+        function switchToCreate() {
+            $('#create').show();
+            $('#change').hide();
+            $('#delete').hide();
+        }
+
+        function switchToChange() {
+            $('#create').hide();
+            $('#change').show();
+            $('#delete').hide();
+        }
+
+        function switchToDelete() {
+            $('#create').hide();
+            $('#change').hide();
+            $('#delete').show();
+        }
+    </script>
+
+    <style type="text/css">
+        .login {
+            behavior: url(PIE.htc);
+            margin-left: 430px;
+            margin-top: 200px;
+            width: 500px;
+            height: 200px;
+            border: 1px solid #eaeaea;
+            -webkit-border-radius: 20px;
+            -moz-border-radius: 20px;
+            border-radius: 20px;
+            -moz-box-shadow: 0px 0px 14px 1px #eaeaea;
+            -webkit-box-shadow: 0px 0px 14px 1px #eaeaea;
+            box-shadow: 0px 0px 14px 1px #eaeaea;
+            background: #E8E8E8;
+        }
+    </style>
+</head>
+<body class="page-body" style="background-color: white">
+<div class="page-container">
+    <div hidden="true" class="sidebar-menu toggle-others fixed " id="menudiv" style="width:250px;background:#E8E8E8">
+        <div class="sidebar-menu-inner" style="background:#E8E8E8">
+            <header class="logo-env" style="padding-left: 0px;border-bottom:1px solid gray;width:250px">
+
+                <!-- logo -->
+                <div class="logo" style="width:250px">
+                    <b style="font-size:23px;color:#6495ED;padding-left:27px;cursor:pointer">对公智能办公系统</b>
+                </div>
+
+                <div class="mobile-menu-toggle visible-xs">
+                    <a href="#" data-toggle="user-info-menu">
+                        <i class="fa-bell-o"></i>
+                        <span class="badge badge-success">7</span>
+                    </a>
+
+                    <a href="#" data-toggle="mobile-menu">
+                        <i class="fa-bars"></i>
+                    </a>
+                </div>
+
+            </header>
+            <ul id="main-menu" class="main-menu" style="padding-left:35px">
+                <li>
+                    <a class="dropdown-collapse"
+                       href="#"
+                       data-toggle="dropdown-collapse" style="border-bottom: 0;">
+                        <span class="title" onclick="switchToCreate()"><b style="font-size:15px">账户开立</b></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-collapse"
+                       href="#"
+                       data-toggle="dropdown-collapse" style="border-bottom: 0;">
+                        <span class="title" onclick="switchToChange()"><b style="font-size:15px">账户变更</b></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-collapse"
+                       href="#"
+                       data-toggle="dropdown-collapse" style="border-bottom: 0;">
+                        <span class="title" onclick="switchToDelete()"><b style="font-size:15px">账户撤销</b></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="login-panel" class="main-content"
+         style="padding-top:6px;overflow-x: hidden;width: 100%;background-image: url(image/login-background.jpg);background-size: cover;">
+        <div class="login" id="auth">
+            <input id="pwd" type="password"
+                   style="position:relative;left: 100px;top: 50px; width: 300px; height: 30px; font-size: 15px">
+            <button class="btn" id="pass" onclick="pass()"
+                    style="position: relative; top: 110px; left:-150px; background-color: #5F97FB;color:white;border-radius: 4px">
+                登录
+            </button>
+            <button class="btn" onclick="resetPwd()"
+                    style="position: relative; top: 110px; left: -70px; background-color: #5F97FB;color: white; border-radius:4px">
+                重置
+            </button>
+        </div>
+    </div>
+    <div id="create" class="main-content"
+         style="padding-top:6px;background-color: white;overflow-x: hidden;width: 100%">
+        <div style="margin-bottom: 6px;margin-top: 0px;">
+            <div style="float:left">
+                <a href="#" title="账户开立"
+                   style="text-decoration: none;cursor:default;font-size: 20px;color:slategray;font-weight: normal">账户开立
+                </a>
+            </div>
+            <!-- Right links for user info navbar -->
+            <div style="position:relative;float:right;margin-left:200px">
+                <a href="#" title="优秀是一种习惯"
+                   style="text-decoration: none;cursor:default;font-size: 10px;color:black;font-weight: normal">优秀是一种习惯
+                </a>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 10px;padding-top: 30px;padding-left:5px;padding-right:5px;border: 0px">
+            <b><font size="4" color="#6495ED">证照信息</font></b>
+            <div class="panel panel-default"
+                 style="padding-left:0px;padding-right:0px;margin-top:0;border:1px solid #CDCDCD">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:-10px;margin-left:0;width:60px;text-align: center">公司名称</span>
+                            <div style="position:relative;margin-top: -15px;width:200px;float: left">
+                                <input type="text" id="corName" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:-10px;margin-left:0;width:60px;text-align: center">公司帐号</span>
+                            <div style="position:relative;margin-top: -15px;width:200px;float: left">
+                                <input type="text" id="corAccount" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:-10px;margin-left:0;width:60px;text-align: center">营业执照</span>
+                            <div style="position:relative;margin-top: -15px;width:200px;float: left">
+                                <input type="text" id="busiLicense" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:-10px;margin-left:0;width:60px;text-align: center">组代证号</span>
+                            <div style="position:relative;margin-top: -15px;width:200px;float: left">
+                                <input type="text" id="orgCode" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">经济类型</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="ecoType">
+                                    <option value="有限责任公司（自然人独资）" selected>有限责任公司（自然人独资）</option>
+                                    <option value="有限责任公司（自然人投资或控股）">有限责任公司（自然人投资或控股）</option>
+                                    <option value="有限责任公司（法人独资）">有限责任公司（法人独资）</option>
+                                    <option value="个体">个体</option>
+                                    <option value="其他有限责任公司">其他有限责任公司</option>
+                                    <option value="1">自定义</option>
+                                    <script type="text/javascript">
+                                        $('#ecoType').change(function () {
+                                            if ($(this).val() == '1') {
+                                                $(this).width('100px');
+                                                $('#defEcoType').show();
+                                            } else {
+                                                $(this).width('200px');
+                                                $('#defEcoType').hide();
+                                            }
+                                        })
+                                    </script>
+                                </select>
+                                <input hidden="true" type="text" id="defEcoType" class="form-controls"
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-20px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">机构类别</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="insType">
+                                    <option value="企业法人" selected>企业法人</option>
+                                    <option value="非法人企业">非法人企业</option>
+                                    <option value="有字号的个体工商户">有字号的个体工商户</option>
+                                    <option value="1">自定义</option>
+                                    <script type="text/javascript">
+                                        $('#insType').change(function () {
+                                            if ($(this).val() == '1') {
+                                                $(this).width('100px');
+                                                $('#defInsType').show();
+                                            } else {
+                                                $(this).width('200px');
+                                                $('#defInsType').hide();
+                                            }
+                                        })
+                                    </script>
+                                </select>
+                                <input hidden="true" type="text" id="defInsType" class="form-controls"
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-20px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0px;margin-left:0;width:60px;text-align: center">注册地址</span>
+                            <div style="position:relative;margin-top:0px;swidth:470px;float: left">
+                                <input type="text" id="regAddress" class="form-controls"
+                                       style="float: left;margin-left:0px;width:470px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">发证机关</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="authority">
+                                    <option value="北京市工商行政管理局丰台分局" selected>北京市工商行政管理局丰台分局</option>
+                                    <option value="北京市工商行政管理局大兴分局">北京市工商行政管理局大兴分局</option>
+                                    <option value="北京市工商行政管理局房山分局">北京市工商行政管理局房山分局</option>
+                                    <option value="北京市工商行政管理局怀柔分局">北京市工商行政管理局怀柔分局</option>
+                                    <option value="北京市工商行政管理局石景山分局">北京市工商行政管理局石景山分局</option>
+                                    <option value="北京市工商行政管理局顺义分局">北京市工商行政管理局顺义分局</option>
+                                    <option value="北京市工商行政管理局朝阳分局">北京市工商行政管理局朝阳分局</option>
+                                    <option value="北京市工商行政管理局延庆分局">北京市工商行政管理局延庆分局</option>
+                                    <option value="北京市工商行政管理局通州分局">北京市工商行政管理局通州分局</option>
+                                    <option value="北京市工商行政管理局密云分局">北京市工商行政管理局密云分局</option>
+                                    <option value="北京市工商行政管理局门头沟分局">北京市工商行政管理局门头沟分局</option>
+                                    <option value="北京市工商行政管理局海淀分局">北京市工商行政管理局海淀分局</option>
+                                    <option value="北京市工商行政管理局昌平分局">北京市工商行政管理局昌平分局</option>
+                                    <option value="北京市工商行政管理局平谷分局">北京市工商行政管理局平谷分局</option>
+                                    <option value="北京市工商行政管理局东城分局">北京市工商行政管理局东城分局</option>
+                                    <option value="北京市工商行政管理局西城分局">北京市工商行政管理局西城分局</option>
+                                    <option value="1">自定义</option>
+                                </select>
+                                <input hidden="true" type="text" id="defAuthority" class="form-controls"
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-20px;color: black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0px;margin-left:0;width:60px;text-align: center">注册邮编</span>
+                            <div style="position:relative;margin-top:0px;swidth:200px;float: left">
+                                <input type="text" id="postCode" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                                <script type="text/javascript">
+                                    $('#postCode').val('100070');
+
+                                    var postCodeMap = {};
+                                    postCodeMap['北京市工商行政管理局丰台分局'] = '100070';
+                                    postCodeMap['北京市工商行政管理局大兴分局'] = '102600';
+                                    postCodeMap['北京市工商行政管理局房山分局'] = '102488';
+                                    postCodeMap['北京市工商行政管理局怀柔分局'] = '101400';
+                                    postCodeMap['北京市工商行政管理局石景山分局'] = '100043';
+                                    postCodeMap['北京市工商行政管理局顺义分局'] = '101300';
+                                    postCodeMap['北京市工商行政管理局朝阳分局'] = '100020';
+                                    postCodeMap['北京市工商行政管理局延庆分局'] = '102100';
+                                    postCodeMap['北京市工商行政管理局通州分局'] = '101149';
+                                    postCodeMap['北京市工商行政管理局密云分局'] = '101500';
+                                    postCodeMap['北京市工商行政管理局门头沟分局'] = '102300';
+                                    postCodeMap['北京市工商行政管理局海淀分局'] = '100089';
+                                    postCodeMap['北京市工商行政管理局昌平分局'] = '102200';
+                                    postCodeMap['北京市工商行政管理局平谷分局'] = '101200';
+                                    postCodeMap['北京市工商行政管理局东城分局'] = '100010';
+                                    postCodeMap['北京市工商行政管理局西城分局'] = '100032';
+
+                                    $('#authority').change(function () {
+                                        if ($(this).val() == '1') {
+                                            $(this).width('100px');
+                                            $('#defAuthority').show();
+                                            $('#postCode').val('');
+                                        } else {
+                                            $(this).width('200px');
+                                            $('#defAuthority').hide();
+                                            $('#postCode').val(postCodeMap[$(this).val()]);
+                                        }
+                                    })
+                                </script>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0px;margin-left:0;width:60px;text-align: center">办公地址</span>
+                            <div style="position:relative;margin-top:0px;swidth:470px;float: left">
+                                <input type="text" id="workAddress" class="form-controls"
+                                       style="float: left;margin-left:0px;width:470px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0px;margin-left:0;width:60px;text-align: center">经营期限</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="busiDate" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0px;margin-left:0;width:60px;text-align: center">成立日期</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="estabDate" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                                <script type="text/javascript">
+                                    $('#busiDate').blur(function () {
+                                        var value = $(this).val();
+                                        if (/^\d{8}-\d{8}$/.test(value)) {
+                                            $('#estabDate').val(value.split('-')[0]);
+                                        } else {
+                                            toastr.error('经营期限格式有误');
+                                        }
+                                    })
+                                </script>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0px;margin-left:0;width:60px;text-align: center">经营范围</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="busiScope" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0px;margin-left:0;width:60px;text-align: center">注册资金</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="regCash" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0px;margin-left:0;width:60px;text-align: center">机信代码</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="creditCode" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0px;margin-left:0;width:60px;text-align: center">开户许可</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="estabPermission" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">地区代码</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="locateCode">
+                                    <option value="100000" selected>100000</option>
+                                    <option value="1">自定义</option>
+                                    <script type="text/javascript">
+                                        $('#locateCode').change(function () {
+                                            if ($(this).val() == '1') {
+                                                $(this).width('100px');
+                                                $('#defLocateCode').show();
+                                            } else {
+                                                $(this).width('200px');
+                                                $('#defLocateCode').hide();
+                                            }
+                                        })
+                                    </script>
+                                </select>
+                                <input hidden="true" type="text" id="defLocateCode" class="form-controls"
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-20px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0px;margin-left:0;width:60px;text-align: center">账户类型</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="accountSign">
+                                    <option value="基本账户" selected>基本账户</option>
+                                    <option value="一般账户">一般账户</option>
+                                    <option value="专用账户">专用账户</option>
+                                    <option value="1">自定义</option>
+                                    <script type="text/javascript">
+                                        $('#accountSign').change(function () {
+                                            if ($(this).val() == '1') {
+                                                $(this).width('100px');
+                                                $('#defAccountSign').show();
+                                            } else {
+                                                $(this).width('200px');
+                                                $('#defAccountSign').hide();
+                                            }
+                                        })
+                                    </script>
+                                </select>
+                                <input hidden="true" type="text" id="defAccountSign" class="form-controls"
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-20px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:6px">
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">开户经办</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="agent">
+                                    <option value="1" selected>法人</option>
+                                    <option value="2">财务主管</option>
+                                    <option value="3">财务经办</option>
+                                    <option value="4">经办人</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">单位座机</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="phone" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">客户号码</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="cusCode" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">网银维护</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="maintainer">
+                                    <option value="默认" selected>默认</option>
+                                    <option value="自定义">自定义</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 30px;padding-top: 0px;padding-left:5px;padding-right:5px;border: 0px">
+            <b><font size="4" color="#6495ED">联系信息</font></b>
+            <div class="panel panel-default"
+                 style="padding-left:0px;padding-right:0px;margin-top:0;border:1px solid #CDCDCD">
+                <div class="panel-body" style="margin-top:-10px">
+                    <div class="row" style="margin-left: 5px">
+                        <span><b><font color="#a0522d">公司法人</font></b></span>
+                        <span style="padding-left:870px"><input name="wygl" type="radio" value="1"/>网银管理</span>
+                        <span><input name="wycz" type="radio" value="1"/>网银操作</span>
+                    </div>
+                    <div class="row legal">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">法人姓名</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="legalName" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">身份证号</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="legalCode" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">有效期限</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="legalExpire" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row legal">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">姓名拼音</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="legalPinyin" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">手机号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="legalPhone" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">邮箱地址</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="legalMail" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left: 5px">
+                        <span><b><a href="#" style="text-decoration:none;cursor:pointer" id="managerinfo"><font
+                                color="#a0522d">财务主管</font></a></b></span>
+                        <span style="padding-left:870px"><input name="wygl" type="radio" value="2" checked/>网银管理</span>
+                        <span><input name="wycz" type="radio" value="2"/>网银操作</span>
+                    </div>
+                    <div class="row manager" hidden="true">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">主管姓名</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="managerName" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">身份证号</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="managerCode" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">有效期限</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="managerExpire" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row manager" hidden="true">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">姓名拼音</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="managerPinyin" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">手机号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="managerPhone" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">邮箱地址</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="managerMail" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        var managerinfoshow = false;
+                        $('#managerinfo').click(function () {
+                            if (managerinfoshow) {
+                                $('.manager').hide();
+                                managerinfoshow = false;
+                            } else {
+                                $('.manager').show();
+                                managerinfoshow = true;
+                            }
+                        })
+                    </script>
+                    <div class="row" style="margin-left: 5px">
+                        <span><b><font color="#a0522d">财务经办</font></b></span>
+                        <span style="padding-left:870px"><input name="wygl" type="radio" value="3"/>网银管理</span>
+                        <span><input name="wycz" type="radio" value="3" checked/>网银操作</span>
+                    </div>
+                    <div class="row accountant">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">经办姓名</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="accountantName" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">身份证号</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="accountantCode" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">有效期限</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="accountantExpire" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row accountant">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">姓名拼音</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="accountantPinyin" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">手机号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="accountantPhone" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">邮箱地址</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="accountantMail" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left: 5px">
+                        <span><b><a href="#" style="text-decoration:none;cursor:pointer" id="agentinfo"><font
+                                color="#a0522d">开户经办</font></a></b></span>
+                        <span style="padding-left:870px"><input name="wygl" type="radio" value="4"/>网银管理</span>
+                        <span><input name="wycz" type="radio" value="4"/>网银操作</span>
+                    </div>
+                    <div class="row agent" hidden="true">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">经办姓名</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="agentName" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">身份证号</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="agentCode" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">有效期限</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="agentExpire" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row agent" hidden="true">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">姓名拼音</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="agentPinyin" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">手机号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="agentPhone" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">邮箱地址</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="agentMail" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        var agentinfoshow = false;
+                        $('#agentinfo').click(function () {
+                            if (agentinfoshow) {
+                                $('.agent').hide();
+                                agentinfoshow = false;
+                            } else {
+                                $('.agent').show();
+                                agentinfoshow = true;
+                            }
+                        })
+                    </script>
+                    <div class="row" style="margin-left: 5px">
+                        <span><b><a href="#" style="text-decoration:none;cursor:pointer" id="bossinfo"><font
+                                color="#a0522d">控股股东</font></a></b></span>
+                    </div>
+                    <div class="row boss" hidden="true">
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">股东姓名</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="bossName" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">证件种类</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="bossCertType">
+                                    <option value="身份证" selected>身份证</option>
+                                    <option value="营业执照">营业执照</option>
+                                    <option value="1">自定义</option>
+                                    <script type="text/javascript">
+                                        $('#bossCertType').change(function () {
+                                            if ($(this).val() == '1') {
+                                                $(this).width('100px');
+                                                $('#defBossCertType').show();
+                                            } else {
+                                                $(this).width('200px');
+                                                $('#defBossCertType').hide();
+                                            }
+                                        })
+                                    </script>
+                                </select>
+                                <input hidden="true" type="text" id="defBossCertType" class="form-controls"
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-20px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">身份证号</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="bossCode" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">有效期限</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="bossExpire" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        var bossinfoshow = false;
+                        $('#bossinfo').click(function () {
+                            if (bossinfoshow) {
+                                $('.boss').hide();
+                                bossinfoshow = false;
+                            } else {
+                                $('.boss').show();
+                                bossinfoshow = true;
+                            }
+                        })
+                    </script>
+                    <div class="row" style="margin-left: 5px">
+                        <span><b><a href="#" style="text-decoration:none;cursor:pointer" id="superiorinfo"><font
+                                color="#a0522d">上级单位</font></a></b></span>
+                    </div>
+                    <div class="row superior" hidden="true">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">公司名称</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="superiorName" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">组代证号</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="superiorCode" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">开户许可</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="superiorPermission" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row superior" hidden="true">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">营业执照</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="superiorLicense" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">机信代码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="superiorCreditCode" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">联系电话</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="superiorPhone" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row superior" hidden="true" style="margin-bottom:6px">
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">法人名称</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="superiorLegalName" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">证件种类</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="superiorCertType">
+                                    <option value="身份证" selected>身份证</option>
+                                    <option value="1">自定义</option>
+                                    <script type="text/javascript">
+                                        $('#superiorCertType').change(function () {
+                                            if ($(this).val() == '1') {
+                                                $(this).width('100px');
+                                                $('#defSuperiorCertType').show();
+                                            } else {
+                                                $(this).width('200px');
+                                                $('#defSuperiorCertType').hide();
+                                            }
+                                        })
+                                    </script>
+                                </select>
+                                <input hidden="true" type="text" id="defSuperiorCertType" class="form-controls"
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-20px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">证件号码</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="superiorCertCode" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">有效期限</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="superiorExpire" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        var superiorinfoshow = false;
+                        $('#superiorinfo').click(function () {
+                            if (superiorinfoshow) {
+                                $('.superior').hide();
+                                superiorinfoshow = false;
+                            } else {
+                                $('.superior').show();
+                                superiorinfoshow = true;
+                            }
+                        })
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <span style="margin-left:30px"><input name="sheets" type="checkbox" value="1" checked/>开户申请书上</span>
+            <span><input name="sheets" type="checkbox" value="2" checked/>开户申请书下网银新</span>
+            <span><input name="sheets" type="checkbox" value="3" checked/>开户申请书下新</span>
+            <span><input name="sheets" type="checkbox" value="4" checked/>开户申请书背面</span>
+            <span><input name="sheets" type="checkbox" value="5" checked/>信用代码申请表</span>
+            <span><input name="sheets" type="checkbox" value="6" checked/>授权书正</span>
+            <span><input name="sheets" type="checkbox" value="7" checked/>授权书背</span>
+            <span><input name="sheets" type="checkbox" value="8" checked/>已开立帐户清单</span>
+            <span><input name="sheets" type="checkbox" value="9" checked/>服务告知函</span>
+            <span><input name="sheets" type="checkbox" value="10" checked/>印鉴卡</span>
+            <span><input name="sheets" type="checkbox" value="11" checked/>上表头</span>
+            <br/>
+            <span style="margin-left:30px"><input name="sheets" type="checkbox" value="12" checked/>服务协议</span>
+            <span><input name="sheets" type="checkbox" value="13" checked/>信息收集表</span>
+            <span><input name="sheets" type="checkbox" value="14" checked/>结算卡申请</span>
+            <span><input name="sheets" type="checkbox" value="15" checked/>结算卡关联</span>
+            <span><input name="sheets" type="checkbox" value="16" checked/>开户申请书上级</span>
+            <span><input name="sheets" type="checkbox" value="17" checked/>机构信用代码申请表上级</span>
+            <span><input name="sheets" type="checkbox" value="18"/>蓝特</span>
+            <span><input name="sheets" type="checkbox" value="19"/>网银</span>
+            <span><input name="sheets" type="checkbox" value="20"/>变更申请书</span>
+            <span><input name="sheets" type="checkbox" value="21"/>销户申请书</span>
+            <span><input name="sheets" type="checkbox" value="22"/>补换发开户许可证</span>
+        </div>
+        <div class="row">
+            <button class="btn" onclick="createAccount()"
+                    style="margin-top:40px;margin-left:500px; background-color: #5F97FB;color:white;border-radius: 4px">
+                开户
+            </button>
+        </div>
+    </div>
+    <div id="change" class="main-content" style="padding-top:6px;background-color: white;overflow-x: hidden;width:100%">
+        <div style="margin-bottom: 6px;margin-top: 0px;">
+            <div style="float:left">
+                <a href="#" title="账户变更"
+                   style="text-decoration: none;cursor:default;font-size: 20px;color:slategray;font-weight: normal">账户变更
+                </a>
+            </div>
+            <!-- Right links for user info navbar -->
+            <div style="position:relative;float:right;margin-left:200px">
+                <a href="#" title="专注是一种高效的情商"
+                   style="text-decoration: none;cursor:default;font-size: 10px;color:black;font-weight: normal">专注是一种高效的情商
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="delete" class="main-content" style="padding-top:6px;background-color: white;overflow-x: hidden;width:100%">
+        <div style="margin-bottom: 6px;margin-top: 0px;">
+            <div style="float:left">
+                <a href="#" title="账户撤销"
+                   style="text-decoration: none;cursor:default;font-size: 20px;color:slategray;font-weight: normal">账户撤销
+                </a>
+            </div>
+            <!-- Right links for user info navbar -->
+            <div style="position:relative;float:right;margin-left:200px">
+                <a href="#" title="隔夜的茶依然留着淡淡的茶香"
+                   style="text-decoration: none;cursor:default;font-size: 10px;color:black;font-weight: normal">隔夜的茶依然留着淡淡的茶香
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
