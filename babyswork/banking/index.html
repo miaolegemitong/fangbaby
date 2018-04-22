@@ -79,9 +79,10 @@
         //            <span><input name="sheets" type="checkbox" value="21"/>销户申请书</span>
         //            <span><input name="sheets" type="checkbox" value="22"/>补换发开户许可证</span>
         function createAccount() {
-            var pnsys = new ActiveXObject("WScript.shell");
-            var userName = pnsys.Environment("PROCESS")("USERNAME");
-            var path = "C:\\Users\\" + userName + "\\Desktop\\excel-template.xls";
+//            var pnsys = new ActiveXObject("WScript.shell");
+//            var userName = pnsys.Environment("PROCESS")("USERNAME");
+//            var path = "C:\\Users\\" + userName + "\\Desktop\\excel-template.xls";
+            var path = "C:\\Users\\Administrator\\Desktop\\excel-template.xls";
             toastr.info(path);
             var excelApp;
             var excelWorkBook;
@@ -315,6 +316,7 @@
                         excelSheet1.Cells(8, 5).value = managerCode;
                         excelSheet1.Cells(8, 7).value = managerExpire;
                         excelSheet1.Cells(9, 4).value = accountantName;
+                        excelSheet1.Cells(9, 5).value = phone;
                         excelSheet1.Cells(9, 6).value = accountantPhone;
                         excelSheet1.Cells(10, 5).value = accountantCode;
                         excelSheet1.Cells(10, 7).value = accountantExpire;
@@ -483,9 +485,13 @@
                             excelSheet13.Cells(6, 2).value = workAddress;
                         }
                         excelSheet13.Cells(8, 4).value = managerName;
-                        excelSheet13.Cells(8, 6).value = "座机：" + phone + " 手机：" + managerPhone;
+                        excelSheet13.Cells(9, 6).value = phone;
+                        excelSheet13.Cells(9, 7).value = managerPhone;
+//                        excelSheet13.Cells(8, 6).value = "座机：" + phone + " 手机：" + managerPhone;
                         excelSheet13.Cells(10, 4).value = accountantName;
-                        excelSheet13.Cells(10, 6).value = "座机：" + phone + " 手机：" + accountantPhone;
+//                        excelSheet13.Cells(10, 6).value = "座机：" + phone + " 手机：" + accountantPhone;
+                        excelSheet13.Cells(11, 6).value = phone;
+                        excelSheet13.Cells(11, 7).value = accountantPhone;
                         excelSheet13.Cells(13, 4).value = legalName + " " + (legalPhone == null || legalPhone == undefined || legalPhone == '' ? phone : legalPhone);
                         excelSheet13.Cells(15, 4).value = bossName;
                         excelSheet13.Cells(15, 7).value = bossCertType;
@@ -568,8 +574,9 @@
                         }
                     }
                 }
-                var fileName = new Date().Format("yyyy年MM月dd日HH时mm分ss秒") + "_" + corName;
-                excelWorkBook.saveAs("C:\\Users\\" + userName + "\\Desktop\\" + fileName + ".xls");
+                var fileName = corName + "_" + new Date().Format("MMdd") + "_开户";
+//                excelWorkBook.saveAs("C:\\Users\\" + userName + "\\Desktop\\" + fileName + ".xls");
+                excelWorkBook.saveAs("C:\\Users\\Administrator\\Desktop\\" + fileName + ".xls");
                 excelWorkBook.close();
                 excelApp.Application.Quit();
                 excelApp = null;
@@ -781,7 +788,7 @@
                                     </script>
                                 </select>
                                 <input hidden="true" type="text" id="defEcoType" class="form-controls"
-                                       style="float: left;margin-left:100px;width:100px;margin-top:-20px;color:black;border: 2px solid lightblue;"/>
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-22px;color:black;border: 2px solid lightblue;"/>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -806,7 +813,7 @@
                                     </script>
                                 </select>
                                 <input hidden="true" type="text" id="defInsType" class="form-controls"
-                                       style="float: left;margin-left:100px;width:100px;margin-top:-20px;color:black;border: 2px solid lightblue;"/>
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-22px;color:black;border: 2px solid lightblue;"/>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -842,7 +849,7 @@
                                     <option value="1">自定义</option>
                                 </select>
                                 <input hidden="true" type="text" id="defAuthority" class="form-controls"
-                                       style="float: left;margin-left:100px;width:100px;margin-top:-20px;color: black;border: 2px solid lightblue;"/>
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-22px;color: black;border: 2px solid lightblue;"/>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -968,7 +975,7 @@
                                     </script>
                                 </select>
                                 <input hidden="true" type="text" id="defLocateCode" class="form-controls"
-                                       style="float: left;margin-left:100px;width:100px;margin-top:-20px;color:black;border: 2px solid lightblue;"/>
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-22px;color:black;border: 2px solid lightblue;"/>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -993,7 +1000,7 @@
                                     </script>
                                 </select>
                                 <input hidden="true" type="text" id="defAccountSign" class="form-controls"
-                                       style="float: left;margin-left:100px;width:100px;margin-top:-20px;color:black;border: 2px solid lightblue;"/>
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-22px;color:black;border: 2px solid lightblue;"/>
                             </div>
                         </div>
                     </div>
@@ -1306,7 +1313,7 @@
                                     </script>
                                 </select>
                                 <input hidden="true" type="text" id="defBossCertType" class="form-controls"
-                                       style="float: left;margin-left:100px;width:100px;margin-top:-20px;color:black;border: 2px solid lightblue;"/>
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-22px;color:black;border: 2px solid lightblue;"/>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -1414,7 +1421,7 @@
                                     </script>
                                 </select>
                                 <input hidden="true" type="text" id="defSuperiorCertType" class="form-controls"
-                                       style="float: left;margin-left:100px;width:100px;margin-top:-20px;color:black;border: 2px solid lightblue;"/>
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-22px;color:black;border: 2px solid lightblue;"/>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -1491,6 +1498,689 @@
                 <a href="#" title="专注是一种高效的情商"
                    style="text-decoration: none;cursor:default;font-size: 10px;color:black;font-weight: normal">专注是一种高效的情商
                 </a>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 10px;padding-top: 30px;padding-left:5px;padding-right:5px;border: 0px">
+            <b><font size="4" color="#6495ED">公司信息</font></b>
+            <div class="panel panel-default"
+                 style="padding-left:0px;padding-right:0px;margin-top:0;border:1px solid #CDCDCD">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:-10px;margin-left:0;width:60px;text-align: center">公司名称</span>
+                            <div style="position:relative;margin-top: -15px;width:200px;float: left">
+                                <input type="text" id="gsmc" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:-10px;margin-left:0;width:60px;text-align: center">公司帐号</span>
+                            <div style="position:relative;margin-top: -15px;width:200px;float: left">
+                                <input type="text" id="gszh" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:-10px;margin-left:0;width:60px;text-align: center">客户号码</span>
+                            <div style="position:relative;margin-top: -15px;width:200px;float: left">
+                                <input type="text" id="khhm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:-10px;margin-left:0;width:60px;text-align: center">账户类型</span>
+                            <div style="position:relative;margin-top: -15px;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="zhlx">
+                                    <option value="基本账户" selected>基本账户</option>
+                                    <option value="一般账户">一般账户</option>
+                                    <option value="专用账户">专用账户</option>
+                                    <option value="1">自定义</option>
+                                    <script type="text/javascript">
+                                        $('#zhlx').change(function () {
+                                            if ($(this).val() == '1') {
+                                                $(this).width('100px');
+                                                $('#defZhlx').show();
+                                            } else {
+                                                $(this).width('200px');
+                                                $('#defZhlx').hide();
+                                            }
+                                        })
+                                    </script>
+                                </select>
+                                <input hidden="true" type="text" id="defZhlx" class="form-controls"
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-22px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-left:0;width:60px;text-align: center">开户许可</span>
+                            <div style="position:relative;width:200px;float: left">
+                                <input type="text" id="khxk" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-left:0;width:60px;text-align: center">机信代码</span>
+                            <div style="position:relative;width:200px;float: left">
+                                <input type="text" id="jxdm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-left:0;width:60px;text-align: center">组代证号</span>
+                            <div style="position:relative;width:200px;float: left">
+                                <input type="text" id="zdzh" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-left:0;width:60px;text-align: center">成立日期</span>
+                            <div style="position:relative;width:200px;float: left">
+                                <input type="text" id="clrq" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-left:0;width:60px;text-align: center">单位座机</span>
+                            <div style="position:relative;width:200px;float: left">
+                                <input type="text" id="dwzj" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-left:0;width:60px;text-align: center">经济类型</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="jjlx">
+                                    <option value="有限责任公司（自然人独资）" selected>有限责任公司（自然人独资）</option>
+                                    <option value="有限责任公司（自然人投资或控股）">有限责任公司（自然人投资或控股）</option>
+                                    <option value="有限责任公司（法人独资）">有限责任公司（法人独资）</option>
+                                    <option value="个体">个体</option>
+                                    <option value="其他有限责任公司">其他有限责任公司</option>
+                                    <option value="1">自定义</option>
+                                    <script type="text/javascript">
+                                        $('#jjlx').change(function () {
+                                            if ($(this).val() == '1') {
+                                                $(this).width('100px');
+                                                $('#defJjlx').show();
+                                            } else {
+                                                $(this).width('200px');
+                                                $('#defJjlx').hide();
+                                            }
+                                        })
+                                    </script>
+                                </select>
+                                <input hidden="true" type="text" id="defJjlx" class="form-controls"
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-22px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">机构类别</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="jglb">
+                                    <option value="企业法人" selected>企业法人</option>
+                                    <option value="非法人企业">非法人企业</option>
+                                    <option value="有字号的个体工商户">有字号的个体工商户</option>
+                                    <option value="1">自定义</option>
+                                    <script type="text/javascript">
+                                        $('#jglb').change(function () {
+                                            if ($(this).val() == '1') {
+                                                $(this).width('100px');
+                                                $('#defJglb').show();
+                                            } else {
+                                                $(this).width('200px');
+                                                $('#defJglb').hide();
+                                            }
+                                        })
+                                    </script>
+                                </select>
+                                <input hidden="true" type="text" id="defJglb" class="form-controls"
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-22px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">发证机关</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="fzjg">
+                                    <option value="北京市工商行政管理局丰台分局" selected>北京市工商行政管理局丰台分局</option>
+                                    <option value="北京市工商行政管理局大兴分局">北京市工商行政管理局大兴分局</option>
+                                    <option value="北京市工商行政管理局房山分局">北京市工商行政管理局房山分局</option>
+                                    <option value="北京市工商行政管理局怀柔分局">北京市工商行政管理局怀柔分局</option>
+                                    <option value="北京市工商行政管理局石景山分局">北京市工商行政管理局石景山分局</option>
+                                    <option value="北京市工商行政管理局顺义分局">北京市工商行政管理局顺义分局</option>
+                                    <option value="北京市工商行政管理局朝阳分局">北京市工商行政管理局朝阳分局</option>
+                                    <option value="北京市工商行政管理局延庆分局">北京市工商行政管理局延庆分局</option>
+                                    <option value="北京市工商行政管理局通州分局">北京市工商行政管理局通州分局</option>
+                                    <option value="北京市工商行政管理局密云分局">北京市工商行政管理局密云分局</option>
+                                    <option value="北京市工商行政管理局门头沟分局">北京市工商行政管理局门头沟分局</option>
+                                    <option value="北京市工商行政管理局海淀分局">北京市工商行政管理局海淀分局</option>
+                                    <option value="北京市工商行政管理局昌平分局">北京市工商行政管理局昌平分局</option>
+                                    <option value="北京市工商行政管理局平谷分局">北京市工商行政管理局平谷分局</option>
+                                    <option value="北京市工商行政管理局东城分局">北京市工商行政管理局东城分局</option>
+                                    <option value="北京市工商行政管理局西城分局">北京市工商行政管理局西城分局</option>
+                                    <option value="1">自定义</option>
+                                </select>
+                                <script type="text/javascript">
+                                    $('#fzjg').change(function () {
+                                        if ($(this).val() == '1') {
+                                            $(this).width('100px');
+                                            $('#defFzjg').show();
+                                        } else {
+                                            $(this).width('200px');
+                                            $('#defFzjg').hide();
+                                        }
+                                    })
+                                </script>
+                                <input hidden="true" type="text" id="defFzjg" class="form-controls"
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-22px;color: black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 10px;padding-top: 0px;padding-left:5px;padding-right:5px;border: 0px">
+            <b><font size="4" color="#6495ED">变更信息</font></b>
+            <div class="panel panel-default"
+                 style="padding-left:0px;padding-right:0px;margin-top:0;border:1px solid #CDCDCD">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:-10px;margin-left:0;width:60px;text-align: center">营业执照</span>
+                            <div style="position:relative;margin-top: -15px;width:200px;float: left">
+                                <input type="text" id="yyzz" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:-10px;margin-left:0;width:60px;text-align: center">注册资金</span>
+                            <div style="position:relative;margin-top: -15px;width:200px;float: left">
+                                <input type="text" id="zczj" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:-10px;margin-left:0;width:60px;text-align: center">经营范围</span>
+                            <div style="position:relative;margin-top: -15px;width:200px;float: left">
+                                <input type="text" id="jyfw" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:-10px;margin-left:0;width:60px;text-align: center">新账户名</span>
+                            <div style="position:relative;margin-top: -15px;width:200px;float: left">
+                                <input type="text" id="xzhm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-left:0;width:60px;text-align: center">注册地址</span>
+                            <div style="position:relative;width:200px;float: left">
+                                <input type="text" id="zcdz" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-left:0;width:60px;text-align: center">注册邮编</span>
+                            <div style="position:relative;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="zcyb">
+                                    <option value="100070" selected>丰台</option>
+                                    <option value="102600">大兴</option>
+                                    <option value="102488">房山</option>
+                                    <option value="101400">怀柔</option>
+                                    <option value="100043">石景山</option>
+                                    <option value="101300">顺义</option>
+                                    <option value="100020">朝阳</option>
+                                    <option value="102100">延庆</option>
+                                    <option value="101149">通州</option>
+                                    <option value="101500">密云</option>
+                                    <option value="102300">门头沟</option>
+                                    <option value="100089">海淀</option>
+                                    <option value="102200">昌平</option>
+                                    <option value="101200">平谷</option>
+                                    <option value="100010">东城</option>
+                                    <option value="100032">西城</option>
+                                    <option value="1">自定义</option>
+                                </select>
+                                <script type="text/javascript">
+                                    $('#zcyb').change(function () {
+                                        if ($(this).val() == '1') {
+                                            $(this).width('100px');
+                                            $('#defZcyb').show();
+                                        } else {
+                                            $(this).width('200px');
+                                            $('#defZcyb').hide();
+                                        }
+                                    })
+                                </script>
+                                <input hidden="true" type="text" id="defZcyb" class="form-controls"
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-22px;color: black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-left:0;width:60px;text-align: center">办公地址</span>
+                            <div style="position:relative;width:200px;float: left">
+                                <input type="text" id="bgdz" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-left:0;width:60px;text-align: center">办公邮编</span>
+                            <div style="position:relative;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="bgyb">
+                                    <option value="100070" selected>丰台</option>
+                                    <option value="102600">大兴</option>
+                                    <option value="102488">房山</option>
+                                    <option value="101400">怀柔</option>
+                                    <option value="100043">石景山</option>
+                                    <option value="101300">顺义</option>
+                                    <option value="100020">朝阳</option>
+                                    <option value="102100">延庆</option>
+                                    <option value="101149">通州</option>
+                                    <option value="101500">密云</option>
+                                    <option value="102300">门头沟</option>
+                                    <option value="100089">海淀</option>
+                                    <option value="102200">昌平</option>
+                                    <option value="101200">平谷</option>
+                                    <option value="100010">东城</option>
+                                    <option value="100032">西城</option>
+                                    <option value="1">自定义</option>
+                                </select>
+                                <script type="text/javascript">
+                                    $('#bgyb').change(function () {
+                                        if ($(this).val() == '1') {
+                                            $(this).width('100px');
+                                            $('#defBgyb').show();
+                                        } else {
+                                            $(this).width('200px');
+                                            $('#defBgyb').hide();
+                                        }
+                                    })
+                                </script>
+                                <input hidden="true" type="text" id="defBgyb" class="form-controls"
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-22px;color: black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 10px;padding-top: -30px;padding-left:5px;padding-right:5px;border: 0px">
+            <b><font size="4" color="#6495ED">人员信息</font></b>
+            <div class="panel panel-default"
+                 style="padding-left:0px;padding-right:0px;margin-top:0px;border:1px solid #CDCDCD">
+                <div class="panel-body">
+                    <div class="row" style="margin-left: 5px;margin-top: -10px;">
+                        <span><b><font color="#a0522d">变更经办</font></b></span>
+                        <span style="padding-left:700px"><input name="frcb" type="checkbox" value="1"/>法人</span>
+                        <span><input name="kzrcb" type="checkbox" value="1"/>实际控制人</span>
+                        <span><input name="zgcb" type="checkbox" value="1"/>财务主管</span>
+                        <span><input name="jbcb" type="checkbox" value="1"/>财务经办</span>
+                    </div>
+                    <div class="row bgjb">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">经办姓名</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="jbxm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">证件种类</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <select style="width:290px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="zjzl">
+                                    <option value="身份证" selected>身份证</option>
+                                    <option value="营业执照">营业执照</option>
+                                    <option value="1">自定义</option>
+                                    <script type="text/javascript">
+                                        $('#zjzl').change(function () {
+                                            if ($(this).val() == '1') {
+                                                $(this).width('100px');
+                                                $('#defZjzl').show();
+                                            } else {
+                                                $(this).width('290px');
+                                                $('#defZjzl').hide();
+                                            }
+                                        })
+                                    </script>
+                                </select>
+                                <input hidden="true" type="text" id="defZjzl" class="form-controls"
+                                       style="float: left;margin-left:100px;width:190px;margin-top:-22px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">证件号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="zjhm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row bgjb">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">有效期限</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="yxqx" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">手机号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="sjhm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">座机号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="jbzjhm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left: 5px">
+                        <span><b><font color="#a0522d">法人信息</font></b></span>
+                        <span style="padding-left:700px"><input name="kzrcb" type="checkbox" value="1"/>实际控制人</span>
+                        <span><input name="zgcb" type="checkbox" value="1"/>财务主管</span>
+                        <span><input name="jbcb" type="checkbox" value="1"/>财务经办</span>
+                    </div>
+                    <div class="row frxx">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">法人姓名</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="frjbxm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">证件种类</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <select style="width:290px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="frzjzl">
+                                    <option value="身份证" selected>身份证</option>
+                                    <option value="营业执照">营业执照</option>
+                                    <option value="1">自定义</option>
+                                    <script type="text/javascript">
+                                        $('#frzjzl').change(function () {
+                                            if ($(this).val() == '1') {
+                                                $(this).width('100px');
+                                                $('#defFrzjzl').show();
+                                            } else {
+                                                $(this).width('290px');
+                                                $('#defFrzjzl').hide();
+                                            }
+                                        })
+                                    </script>
+                                </select>
+                                <input hidden="true" type="text" id="defFrzjzl" class="form-controls"
+                                       style="float: left;margin-left:100px;width:190px;margin-top:-22px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">证件号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="frzjhm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row frxx">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">有效期限</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="fryxqx" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">手机号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="frsjhm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">座机号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="frjbzjhm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left: 5px">
+                        <span><b><a href="#" style="text-decoration:none;cursor:pointer" id="kggd"><font
+                                color="#a0522d">控股股东</font></a></b></span>
+                    </div>
+                    <div class="row kggd" hidden="true">
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">股东姓名</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="gdxb" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">证件种类</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <select style="width:200px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="gdzjzl">
+                                    <option value="身份证" selected>身份证</option>
+                                    <option value="营业执照">营业执照</option>
+                                    <option value="1">自定义</option>
+                                    <script type="text/javascript">
+                                        $('#gdzjzl').change(function () {
+                                            if ($(this).val() == '1') {
+                                                $(this).width('100px');
+                                                $('#defGdzjzl').show();
+                                            } else {
+                                                $(this).width('200px');
+                                                $('#defGdzjzl').hide();
+                                            }
+                                        })
+                                    </script>
+                                </select>
+                                <input hidden="true" type="text" id="defGdzjzl" class="form-controls"
+                                       style="float: left;margin-left:100px;width:100px;margin-top:-22px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">身份证号</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="gdsfzh" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">有效期限</span>
+                            <div style="position:relative;margin-top:0px;width:200px;float: left">
+                                <input type="text" id="gdyxqx" class="form-controls"
+                                       style="float: left;margin-left:0px;width:200px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        var gdshow = false;
+                        $('#kggd').click(function () {
+                            if (gdshow) {
+                                $('.kggd').hide();
+                                gdshow = false;
+                            } else {
+                                $('.kggd').show();
+                                gdshow = true;
+                            }
+                        })
+                    </script>
+                    <div class="row" style="margin-left: 5px">
+                        <span><b><a href="#" style="text-decoration:none;cursor:pointer" id="cwzg"><font
+                                color="#a0522d">财务主管</font></a></b></span>
+                    </div>
+                    <div class="row cwzg" hidden="true">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">主管姓名</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="zgxm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">证件种类</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <select style="width:290px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="zgzjzl">
+                                    <option value="身份证" selected>身份证</option>
+                                    <option value="营业执照">营业执照</option>
+                                    <option value="1">自定义</option>
+                                    <script type="text/javascript">
+                                        $('#zgzjzl').change(function () {
+                                            if ($(this).val() == '1') {
+                                                $(this).width('100px');
+                                                $('#defZgzjzl').show();
+                                            } else {
+                                                $(this).width('290px');
+                                                $('#defZgzjzl').hide();
+                                            }
+                                        })
+                                    </script>
+                                </select>
+                                <input hidden="true" type="text" id="defZgzjzl" class="form-controls"
+                                       style="float: left;margin-left:100px;width:190px;margin-top:-22px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">证件号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="zgzjhm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cwzg" hidden="true">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">有效期限</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="zgyxqx" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">手机号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="zgsjhm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">座机号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="zgzuojihm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        var zgshow = false;
+                        $('#cwzg').click(function () {
+                            if (zgshow) {
+                                $('.cwzg').hide();
+                                zgshow = false;
+                            } else {
+                                $('.cwzg').show();
+                                zgshow = true;
+                            }
+                        })
+                    </script>
+                    <div class="row" style="margin-left: 5px">
+                        <span><b><a href="#" style="text-decoration:none;cursor:pointer" id="cwjb"><font
+                                color="#a0522d">财务经办</font></a></b></span>
+                    </div>
+                    <div class="row cwjb" hidden="true">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">经办姓名</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="cwjbxm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">证件种类</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <select style="width:290px;float: left;left: 10px;right:20px;border: 2px solid lightblue;"
+                                        id="cwjbzjzl">
+                                    <option value="身份证" selected>身份证</option>
+                                    <option value="营业执照">营业执照</option>
+                                    <option value="1">自定义</option>
+                                    <script type="text/javascript">
+                                        $('#cwjbzjzl').change(function () {
+                                            if ($(this).val() == '1') {
+                                                $(this).width('100px');
+                                                $('#defCwjbzjzl').show();
+                                            } else {
+                                                $(this).width('290px');
+                                                $('#defCwjbzjzl').hide();
+                                            }
+                                        })
+                                    </script>
+                                </select>
+                                <input hidden="true" type="text" id="defCwjbzjzl" class="form-controls"
+                                       style="float: left;margin-left:100px;width:190px;margin-top:-22px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">证件号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="cwjbzjhm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cwjb" hidden="true">
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">有效期限</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="cwjbyxqx" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">手机号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="cwjbsjhm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <span style="float:left;font-size:13px;color:black;margin-right: 10px;margin-top:0;margin-left:0;width:60px;text-align: center">座机号码</span>
+                            <div style="position:relative;margin-top:0px;width:290px;float: left">
+                                <input type="text" id="cwjbzuojihm" class="form-controls"
+                                       style="float: left;margin-left:0px;width:290px;color:black;border: 2px solid lightblue;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        var cwjbshow = false;
+                        $('#cwjb').click(function () {
+                            if (cwjbshow) {
+                                $('.cwjb').hide();
+                                cwjbshow = false;
+                            } else {
+                                $('.cwjb').show();
+                                cwjbshow = true;
+                            }
+                        })
+                    </script>
+                </div>
             </div>
         </div>
     </div>

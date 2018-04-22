@@ -1,0 +1,150 @@
+/**
+ *
+ * Apply your custom CSS here
+ *
+*/
+
+body {
+}
+
+a {
+}
+
+
+/*.choosed-td{*/
+/*background-color:#4fcdfc;*/
+/*}*/
+
+.p-center {
+    text-align: center;
+}
+
+.col-sm-1-10 {
+    width : 12.5%;
+    float: left;
+    position:relative;
+    border : solid 1px white;
+    margin : 0px;
+}
+
+.col-sm-2-10 {
+    width: 12%;
+    float: left;
+    position:relative;
+    border:solid 1px black;
+    margin: 0px;
+}
+
+.mylable{
+    float: left;
+    font-size: 15px;
+    color: black;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-left: 20px;
+}
+.option-div{
+    width:15%;
+    float:left;
+    padding-left: 10px;
+    padding-right: 30px;
+}
+.main-panel-div{
+    width:100%;
+    float:left;
+}
+/*主要指标*/
+.main-index {
+    color:black;
+    font-size:18px;
+    text-align: center;
+}
+
+.xe-widget.xe-counter-block .xe-lower span, .xe-widget.xe-counter-block .xe-lower strong, .xe-widget.xe-progress-counter .xe-lower span, .xe-widget.xe-progress-counter .xe-lower strong {
+    font-size: 10px;
+    text-transform: uppercase;
+    display: inline;
+}
+
+.xe-widget.xe-progress-counter .xe-lower {
+    /* padding: 15px 30px; */
+    padding: 5px 0px 20px 0px;
+    text-align: center;
+}
+/* .nav.nav-tabs > li.active > a {
+    background-color: #fff;
+    background-color: #0e62c7;
+    color: #ffffff;
+    font-size: medium;
+} */
+
+
+.main-div{
+    margin:2px;
+    padding:2px;
+}
+
+.main-index-p {
+    /* modify by lijuanfang font-size:20px; */
+    font-size:18px;
+    text-align:center;
+    color:black;
+}
+
+.div-nomargin-nopadding {
+    margin:0px;
+    padding:0px;
+}
+
+/*#option,#pay_amount {*/
+/*min-height: 20px;*/
+/*height: auto !important;*/
+/*height: 20px;*/
+/*}*/
+
+#main-index-row {
+
+}
+
+#main-index-choose {
+    background-color: green;
+}
+
+.choose-div {
+    background-color: greenyellow;
+}
+
+.choose-td {
+    /* background-color: #00a8e6!important; */
+    background-color: #0e62c7!important;
+    color: #ffffff;
+}
+
+.nav.nav-tabs > li.active > a {
+    background-color: #0e62c7;
+    color: #ffffff;
+}
+
+.visible-hidden{
+    visibility: hidden;
+}
+
+.visible-visible {
+    visibility: visible;
+}
+
+.display-none {
+    display: none;
+}
+
+.vertical-text {
+    width: 20px;
+    font-size: 20px;
+    word-wrap: break-word;
+    letter-spacing: 10px;
+}
+
+.ul-vertical {
+    min-width: 20px!important;
+    width:20px!important;
+}

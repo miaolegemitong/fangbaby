@@ -1,0 +1,140 @@
+/**
+ *
+ * Apply your custom CSS here
+ *
+*/
+
+body {	
+}
+
+a {
+}
+
+
+/*.choosed-td{*/
+    /*background-color:#4fcdfc;*/
+/*}*/
+
+.p-center {
+    text-align: center;
+}
+
+.col-sm-1-10 {
+    width : 11%;
+    float: left;
+    position:relative;
+    border : solid 1px black;
+    margin : 0px;
+}
+
+.col-sm-2-10 {
+    width: 12%;
+    float: left;
+    position:relative;
+    border:solid 1px black;
+    margin: 0px;
+}
+/*主要指标*/
+.main-index {
+    color:black;
+    font-size:18px;
+    text-align: center;
+}
+
+
+.main-div{
+    margin:2px;
+    padding:2px;
+}
+
+.main-index-p {
+    font-size:20px;
+    text-align:center;
+    color:black;
+}
+
+.div-nomargin-nopadding {
+    margin:0px;
+    padding:0px;
+}
+
+/*#option,#pay_amount {*/
+    /*min-height: 20px;*/
+    /*height: auto !important;*/
+    /*height: 20px;*/
+/*}*/
+
+#main-index-row {
+
+}
+
+#main-index-choose {
+    background-color: green;
+}
+
+.choose-div {
+    background-color: greenyellow;
+}
+
+.choose-td {
+    background-color: #00a8e6!important;
+}
+
+.visible-hidden{
+    visibility: hidden;
+}
+
+.visible-visible {
+    visibility: visible;
+}
+
+.display-none {
+    display: none;
+}
+
+.vertical-text {
+    width: 20px;
+    font-size: 20px;
+    word-wrap: break-word;
+    letter-spacing: 10px;
+}
+
+.ul-vertical {
+    min-width: 20px!important;
+    width:20px!important;
+}
+
+.circle-rate {
+
+}
+
+.same-rate {
+
+}
+
+/**/
+.mt-span {
+
+}
+
+.dp-span {
+
+}
+
+/*酒旅的子(美团/点评)业绩, 只是数据类型为美大的时候,这个类的div显示*/
+.hotel-travel-sub-div {
+}
+
+.bussiness-line-sub-div {
+}
+
+
+.main-iframe {
+    width:100%;
+    border:none;
+    /*min-height: 900px;*/
+    /*height:1300px;*/
+    overflow:hidden;
+    scrolling:no;
+}
+
